@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { MapPin, MessageSquare, Phone } from 'lucide-react'
 import { siteContent } from '../../data/siteContent'
 import { scrollToTop } from '../../utils/scroll'
-import { LumtekLogo } from '../ui/LumtekLogo'
+import { HeaderBrand } from './HeaderBrand'
 
 const footerNav = [
   { label: 'Inicio', to: '/' },
@@ -32,14 +32,14 @@ export const Footer = () => {
       <div className="mx-auto max-w-7xl section-x">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <LumtekLogo
-              size="md"
-              variant="wordmark"
-              staticWordmark
-              asLink
-              className="shrink-0 gap-2 overflow-visible text-xl sm:text-2xl"
-              onHomeClick={handleHomeClick}
-            />
+            <Link
+              to="/"
+              onClick={handleHomeClick}
+              className="inline-flex transition-opacity hover:opacity-90"
+              aria-label="Lumtek, ir al inicio"
+            >
+              <HeaderBrand size="footer" staticWordmark />
+            </Link>
             <p className="mt-4 text-sm leading-relaxed text-lumtek-text-secondary">
               {siteContent.claim}
             </p>
