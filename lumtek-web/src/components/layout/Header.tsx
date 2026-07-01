@@ -7,7 +7,7 @@ import { useScrollHeader } from '../../hooks/useScrollHeader'
 import { scrollToTop } from '../../utils/scroll'
 import { CursorFill } from '../ui/CursorFill'
 import { GlowButton } from '../ui/GlowButton'
-import { LumtekLogo } from '../ui/LumtekLogo'
+import { HeaderBrand } from './HeaderBrand'
 
 export const Header = () => {
   const scrolled = useScrollHeader()
@@ -40,15 +40,10 @@ export const Header = () => {
         <Link
           to="/"
           onClick={handleHomeNav}
-          className="inline-flex shrink-0 items-center justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue"
+          className="inline-flex shrink-0 items-center gap-2 justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue sm:gap-2.5"
           aria-label="Lumtek, ir al inicio"
         >
-          <LumtekLogo
-            size="md"
-            variant="wordmark"
-            asLink={false}
-            className="shrink-0 gap-1.5 text-lg sm:gap-2 sm:text-xl md:text-2xl"
-          />
+          <HeaderBrand />
         </Link>
 
         <nav
@@ -109,6 +104,14 @@ export const Header = () => {
             aria-label="Menú móvil"
           >
             <div className="flex flex-col gap-1 px-4 py-4 pb-safe">
+              <Link
+                to="/"
+                onClick={handleHomeNav}
+                className="mb-3 inline-flex transition-opacity hover:opacity-90"
+                aria-label="Lumtek, ir al inicio"
+              >
+                <HeaderBrand />
+              </Link>
               {navItems.map((item) => (
                 <CursorFill
                   key={item.href + item.label}

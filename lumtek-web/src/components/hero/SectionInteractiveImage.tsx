@@ -97,6 +97,8 @@ export const SectionInteractiveImage = ({
 
   if (!map) return null
 
+  const ventanasLight = fill && section.id === 'ventanas'
+
   const nodeSize = fill ? 'h-8 w-8' : compact ? 'h-7 w-7' : 'h-9 w-9 sm:h-10 sm:w-10'
   const iconSize = fill ? 'h-3.5 w-3.5' : compact ? 'h-3 w-3' : 'h-4 w-4'
 
@@ -131,7 +133,14 @@ export const SectionInteractiveImage = ({
         {showImage && (
           <>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_35%,rgba(6,10,16,0.55)_100%)]" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#060a10]/40 via-transparent to-[#060a10]/80" aria-hidden />
+        <div
+          className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${
+            ventanasLight
+              ? 'from-white/50 via-transparent to-white/35'
+              : 'from-[#060a10]/40 via-transparent to-[#060a10]/80'
+          }`}
+          aria-hidden
+        />
 
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
@@ -271,7 +280,11 @@ export const SectionInteractiveImage = ({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.24, ease }}
-              className="phone-text-crisp pointer-events-none absolute z-40 rounded-lg border border-lumtek-cyan/40 bg-[#0a1018]/96 px-2 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_16px_rgba(0,168,255,0.22)] backdrop-blur-md"
+              className={`phone-text-crisp pointer-events-none absolute z-40 rounded-lg px-2 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md ${
+                ventanasLight
+                  ? 'border border-slate-200/90 bg-white/96'
+                  : 'border border-lumtek-cyan/40 bg-[#0a1018]/96 shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_16px_rgba(0,168,255,0.22)]'
+              }`}
               style={{
                 left: fillTooltip.x,
                 top: fillTooltip.y,
@@ -279,14 +292,26 @@ export const SectionInteractiveImage = ({
               }}
             >
               {active.tag && (
-                <p className="truncate text-[8px] font-semibold uppercase tracking-[0.1em] text-lumtek-cyan/85">
+                <p
+                  className={`truncate text-[8px] font-semibold uppercase tracking-[0.1em] ${
+                    ventanasLight ? 'text-lumtek-blue' : 'text-lumtek-cyan/85'
+                  }`}
+                >
                   {active.tag}
                 </p>
               )}
-              <p className="truncate text-[11px] font-semibold leading-tight text-white">
+              <p
+                className={`truncate text-[11px] font-semibold leading-tight ${
+                  ventanasLight ? 'text-black' : 'text-white'
+                }`}
+              >
                 {active.label}
               </p>
-              <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-slate-300">
+              <p
+                className={`mt-0.5 line-clamp-2 text-[10px] leading-snug ${
+                  ventanasLight ? 'text-slate-800' : 'text-slate-300'
+                }`}
+              >
                 {active.description}
               </p>
             </motion.div>

@@ -15,19 +15,23 @@ const smtpSecure = process.env.SMTP_SECURE !== 'false'
 const smtpUser = process.env.SMTP_USER || 'juanf.delgado@lumtek.es'
 const smtpPass = process.env.SMTP_PASS
 const mailTo = process.env.MAIL_TO || smtpUser
+const mailFromName = process.env.MAIL_FROM_NAME || 'Lumtek Web'
+
+const smtpOptions = {
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpSecure,
+  auth: smtpPass ? { user: smtpUser, pass: smtpPass } : undefined,
+}
+if (!smtpSecure) {
+  smtpOptions.requireTLS = process.env.SMTP_REQUIRE_TLS !== 'false'
+}
 
 const app = express()
 app.use(cors({ origin: process.env.CORS_ORIGIN || true }))
 app.use(express.json({ limit: '32kb' }))
 
-const transporter =
-  smtpPass &&
-  nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpSecure,
-    auth: { user: smtpUser, pass: smtpPass },
-  })
+const transporter = smtpPass ? nodemailer.createTransport(smtpOptions) : null
 
 const validateBody = (body) => {
   const errors = []
@@ -40,6 +44,10 @@ const validateBody = (body) => {
   if (!body?.privacyAccepted) errors.push('privacyAccepted')
   return errors
 }
+
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, smtp: Boolean(transporter) })
+})
 
 app.post('/api/contact', async (req, res) => {
   if (!transporter) {
@@ -73,7 +81,7 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"Lumtek Web" <${smtpUser}>`,
+      from: `"${mailFromName}" <${smtpUser}>`,
       to: mailTo,
       replyTo: email,
       subject: `[Lumtek] ${projectType} — ${name}`,

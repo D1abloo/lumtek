@@ -1,0 +1,20 @@
+# Copiar a /etc/systemd/system/lumtek-api.service
+# systemctl daemon-reload && systemctl enable --now lumtek-api
+#
+# Ajusta WorkingDirectory y el usuario. El .env debe estar en lumtek-web/
+
+[Unit]
+Description=Lumtek contact API (Node + SMTP GoDaddy)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/lumtek-app/lumtek-web
+EnvironmentFile=/var/www/lumtek-app/lumtek-web/.env
+ExecStart=/usr/bin/node server/index.mjs
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

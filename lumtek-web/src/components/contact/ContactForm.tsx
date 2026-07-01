@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Loader2, Send, AlertCircle } from 'lucide-react'
@@ -46,6 +46,16 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
   const [errors, setErrors] = useState<ContactFormErrors>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (status !== 'loading') return
+    setProgress(6)
+    const timer = window.setInterval(() => {
+      setProgress((p) => (p >= 92 ? p : p + 7))
+    }, 110)
+    return () => window.clearInterval(timer)
+  }, [status])
 
   const handleChange = (
     field: keyof ContactFormData,
@@ -64,12 +74,16 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
     }
 
     setStatus('loading')
+    setProgress(0)
     const result = await sendContactForm(data)
 
     if (result.ok) {
+      setProgress(100)
+      await new Promise((resolve) => window.setTimeout(resolve, 480))
       setStatus('success')
       setData(initialData)
     } else {
+      setProgress(0)
       setStatus('error')
       setErrorMsg(result.message)
     }
@@ -85,12 +99,15 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
         <CheckCircle className="mx-auto h-12 w-12 text-emerald-600" />
         <h3 className="mt-4 font-display text-xl font-bold text-lumtek-text">Mensaje enviado</h3>
         <p className="mt-2 text-sm text-lumtek-text-secondary">
-          Hemos recibido tu solicitud. Te contactaremos pronto para hablar de tu proyecto de
-          domótica o sistemas inteligentes.
+          Tu mensaje ha sido enviado correctamente. Hemos recibido tu solicitud y te
+          contactaremos pronto para hablar de tu proyecto de domótica o sistemas inteligentes.
         </p>
         <button
           type="button"
-          onClick={() => setStatus('idle')}
+          onClick={() => {
+            setStatus('idle')
+            setProgress(0)
+          }}
           className="mt-6 text-sm text-lumtek-blue hover:underline"
         >
           Enviar otro mensaje
@@ -206,6 +223,36 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
       {errors.privacyAccepted && (
         <p className="text-xs text-red-400" role="alert">{errors.privacyAccepted}</p>
       )}
+
+      <AnimatePresence>
+        {status === 'loading' && (
+          <motion.div
+            className="space-y-2 rounded-xl border border-lumtek-border bg-slate-50 p-4"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div className="flex items-center justify-between text-xs font-medium text-lumtek-text-secondary">
+              <span>Enviando tu mensaje...</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-lumtek-blue to-lumtek-cyan"
+                initial={{ width: '0%' }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.22, ease: 'easeOut' }}
+              />
+            </div>
+            <p className="text-xs text-lumtek-text-secondary">
+              Estamos procesando tu solicitud de contacto.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {status === 'error' && (
