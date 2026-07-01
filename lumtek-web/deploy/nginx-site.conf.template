@@ -1,0 +1,21 @@
+# Lumtek — Nginx SPA (generado por setup-and-deploy.sh)
+# Dominio: __LUMTEK_DOMAIN__
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __LUMTEK_DOMAIN__;
+
+    root __LUMTEK_WEB_ROOT__;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(?:js|css|png|jpg|jpeg|gif|ico|svg|webp|woff2?)$ {
+        expires 7d;
+        add_header Cache-Control "public";
+        try_files $uri =404;
+    }
+}

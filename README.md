@@ -28,9 +28,16 @@ npm run dev
 
 ```bash
 cd lumtek-web
-npm run build
-scp -r dist/. root@31.70.109.174:/var/www/lumtek/
-ssh root@31.70.109.174 "chown -R www-data:www-data /var/www/lumtek"
+bash deploy/deploy.sh
 ```
 
-Detalle paso a paso (primera instalación, SSL, renovación): [`docs/VPS.md`](docs/VPS.md).
+### VPS nueva (montaje + deploy en un paso)
+
+```bash
+cd lumtek-web
+export LUMTEK_VPS_IP=203.0.113.10
+export LUMTEK_CERTBOT_EMAIL=admin@ejemplo.com
+bash deploy/setup-and-deploy.sh
+```
+
+Detalle paso a paso (manual, SSL, renovación): [`docs/VPS.md`](docs/VPS.md).

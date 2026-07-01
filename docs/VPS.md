@@ -36,6 +36,30 @@ No hace falta comprar dominio ni configurar DNS en un registrador: basta con que
 
 ## 2. Preparar el VPS (primera vez)
 
+### Automático (recomendado)
+
+Desde tu máquina, con SSH al VPS ya configurado:
+
+```bash
+cd lumtek-web
+export LUMTEK_VPS_IP=31.70.109.174          # IP del VPS nuevo
+export LUMTEK_CERTBOT_EMAIL=admin@ejemplo.com
+bash deploy/setup-and-deploy.sh
+```
+
+El script instala Nginx, Certbot, UFW, configura `lumtek.IP.nip.io`, emite SSL y sube el build.
+
+Variables opcionales: `LUMTEK_VPS_USER`, `LUMTEK_SITE_PREFIX`, `LUMTEK_DEPLOY_PATH`, `LUMTEK_DOMAIN`.  
+Plantilla de env: [`lumtek-web/deploy/deploy.env.example`](../lumtek-web/deploy/deploy.env.example).
+
+Solo redesplegar código en VPS ya montada:
+
+```bash
+bash deploy/deploy.sh
+```
+
+### Manual
+
 Conectar por SSH:
 
 ```bash

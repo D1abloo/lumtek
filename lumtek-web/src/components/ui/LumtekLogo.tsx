@@ -194,6 +194,7 @@ type LumtekLogoProps = {
   variant?: 'image' | 'wordmark'
   asLink?: boolean
   showTagline?: boolean
+  showMark?: boolean
   staticWordmark?: boolean
   className?: string
   onHomeClick?: () => void
@@ -203,10 +204,12 @@ const ColoredWordmark = ({
   size,
   className = '',
   staticWordmark = false,
+  showMark = true,
 }: {
   size: keyof typeof sizeMap
   className?: string
   staticWordmark?: boolean
+  showMark?: boolean
 }) => {
   const reduced = useReducedMotion()
   const instant = reduced || staticWordmark
@@ -217,7 +220,7 @@ const ColoredWordmark = ({
       className={`inline-flex items-center gap-2 overflow-visible font-bold leading-none tracking-[0.04em] ${wordmarkClass[size]} ${className}`}
       aria-hidden
     >
-      <AnimatedLogoMark size={size} instant={instant} />
+      {showMark && <AnimatedLogoMark size={size} instant={instant} />}
       {letters.map((letter, index) => {
         const delay = (index + 1) * LETTER_STAGGER_S
         const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
@@ -288,12 +291,14 @@ const LogoMark = ({
   size,
   variant,
   showTagline,
+  showMark = true,
   staticWordmark,
   className = '',
 }: {
   size: keyof typeof sizeMap
   variant: 'image' | 'wordmark'
   showTagline?: boolean
+  showMark?: boolean
   staticWordmark?: boolean
   className?: string
 }) => {
@@ -302,7 +307,7 @@ const LogoMark = ({
   if (variant === 'wordmark') {
     return (
       <div className={`flex items-center overflow-visible ${className}`}>
-        <ColoredWordmark size={size} staticWordmark={staticWordmark} />
+        <ColoredWordmark size={size} staticWordmark={staticWordmark} showMark={showMark} />
       </div>
     )
   }
@@ -374,6 +379,7 @@ export const LumtekLogo = ({
   variant = 'image',
   asLink = false,
   showTagline = false,
+  showMark = true,
   staticWordmark = false,
   className = '',
   onHomeClick,
@@ -384,6 +390,7 @@ export const LumtekLogo = ({
       size={size}
       variant={variant}
       showTagline={showTagline}
+      showMark={showMark}
       staticWordmark={staticWordmark}
       className={className}
     />

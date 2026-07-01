@@ -122,8 +122,20 @@ export const getSectionHotspotMap = (sectionId: AppSectionId) =>
   sectionHotspotMaps.find((m) => m.sectionId === sectionId)
 
 const labelPlacement = (x: number, y: number, narrow = false) => {
-  const vertical = y < (narrow ? 38 : 42) ? 'bottom' : 'top'
-  const horizontal = x < (narrow ? 32 : 28) ? 'right' : x > (narrow ? 68 : 72) ? 'left' : 'center'
+  const vertical = narrow
+    ? y < 50
+      ? 'bottom'
+      : 'top'
+    : y < 42
+      ? 'bottom'
+      : 'top'
+  const horizontal = narrow
+    ? 'center'
+    : x < 28
+      ? 'right'
+      : x > 72
+        ? 'left'
+        : 'center'
   return { vertical, horizontal }
 }
 
@@ -139,12 +151,6 @@ export const getHotspotLabelClasses = (x: number, y: number, narrow = false) => 
       : horizontal === 'left'
         ? 'right-0 translate-x-0'
         : 'left-1/2 -translate-x-1/2'
-  const clampClass = narrow
-    ? horizontal === 'right'
-      ? 'max-w-[7rem]'
-      : horizontal === 'left'
-        ? 'max-w-[7rem]'
-        : 'max-w-[8rem]'
-    : ''
+  const clampClass = narrow ? 'max-w-[4.75rem]' : ''
   return `${verticalClass} ${horizontalClass} ${clampClass}`.trim()
 }

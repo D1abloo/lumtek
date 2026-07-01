@@ -8,7 +8,6 @@ import { scrollToTop } from '../../utils/scroll'
 import { CursorFill } from '../ui/CursorFill'
 import { GlowButton } from '../ui/GlowButton'
 import { LumtekLogo } from '../ui/LumtekLogo'
-import { LUMTEK_BRAND_LOGO_SRC } from './HeaderLogo'
 
 export const Header = () => {
   const scrolled = useScrollHeader()
@@ -41,24 +40,14 @@ export const Header = () => {
         <Link
           to="/"
           onClick={handleHomeNav}
-          className="inline-flex min-w-0 shrink-0 items-center gap-2 justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue sm:gap-2.5"
+          className="inline-flex min-w-0 shrink-0 items-center justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue"
           aria-label="Lumtek, ir al inicio"
         >
-          <img
-            src={LUMTEK_BRAND_LOGO_SRC}
-            alt=""
-            width={120}
-            height={80}
-            className="h-8 w-auto max-w-[3.25rem] shrink-0 object-contain object-left sm:h-9 sm:max-w-[3.75rem] md:h-10 md:max-w-[4.25rem]"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-            aria-hidden
-          />
           <LumtekLogo
             size="md"
             variant="wordmark"
             asLink={false}
+            showMark={false}
             className="min-w-0 overflow-visible max-md:[&_span]:text-lg md:[&_span]:text-2xl"
           />
         </Link>
