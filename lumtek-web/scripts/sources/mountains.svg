@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" fill="none" aria-hidden="true">
+  <path
+    d="M0 500 L140 210 L280 290 L420 120 L560 230 L700 80 L860 200 L1000 140 L1200 220 L1200 500 Z"
+    fill="#5a9ec8"
+    fill-opacity="0.72"
+  />
+  <path
+    d="M0 500 L100 340 L240 390 L360 280 L500 350 L640 260 L780 330 L920 300 L1200 380 L1200 500 Z"
+    fill="#3d85b5"
+    fill-opacity="0.58"
+  />
+  <path
+    d="M0 500 L80 410 L200 430 L320 395 L460 420 L600 400 L740 415 L880 405 L1200 435 L1200 500 Z"
+    fill="#2a6d96"
+    fill-opacity="0.45"
+  />
+</svg>

@@ -1,0 +1,17 @@
+# Dependencias y builds
+lumtek-web/node_modules/
+lumtek-web/dist/
+lumtek-web/dist-ssr/
+
+# Secretos
+lumtek-web/.env
+lumtek-web/.env.*
+!lumtek-web/.env.example
+
+# Logs y caché local
+*.log
+.lighthouseci/
+.DS_Store
+
+# IDE (opcional; no subir estado local pesado)
+.cursor/

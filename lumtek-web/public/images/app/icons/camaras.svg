@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <g id="camaras">
+    <rect x="8" y="14" width="26" height="20" rx="4" fill="#0F172A" stroke="#00A8FF" stroke-width="2"/>
+    <circle cx="21" cy="24" r="7" fill="#0F172A" stroke="#22D3EE" stroke-width="2"/>
+    <circle cx="21" cy="24" r="3.5" fill="#00A8FF"/>
+    <circle cx="21" cy="24" r="1.5" fill="#5CD4FF"/>
+    <path d="M34 18l6-3v18l-6-3V18z" fill="#00A8FF"/>
+    <circle cx="30" cy="16" r="2.5" fill="#EF4444"/>
+    <circle cx="30" cy="16" r="1" fill="#FEE2E2"/>
+  </g>
+</svg>

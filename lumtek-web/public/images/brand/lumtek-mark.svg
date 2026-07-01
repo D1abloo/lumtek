@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 658" fill="none">
+  <g id="icon">
+    <path
+      id="frame-fill"
+      d="M512 26 L992 329 L512 632 L32 329 Z"
+      fill="#0F172A"
+    />
+    <path
+      id="frame-stroke"
+      d="M512 26 L992 329 L512 632 L32 329 Z"
+      stroke="#00A8FF"
+      stroke-width="10"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <g id="network" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" opacity="0.55">
+      <path d="M512 329 L512 98" />
+      <path d="M512 329 L512 560" />
+      <path d="M512 329 L168 329" />
+      <path d="M512 329 L856 329" />
+    </g>
+    <circle id="node-top" cx="512" cy="98" r="16" fill="#00A8FF" />
+    <circle id="node-left" cx="168" cy="329" r="16" fill="#00A8FF" />
+    <circle id="node-right" cx="856" cy="329" r="16" fill="#00A8FF" />
+    <circle id="node-bottom" cx="512" cy="560" r="16" fill="#5CD4FF" />
+    <g id="hub">
+      <path id="roof" d="M512 248 L588 312 H436 Z" fill="#00A8FF" />
+      <rect id="house" x="448" y="312" width="128" height="88" rx="6" fill="#00A8FF" />
+      <rect id="door" x="492" y="348" width="40" height="52" rx="3" fill="#0F172A" />
+      <rect id="window-left" x="458" y="332" width="28" height="24" rx="2" fill="#5CD4FF" />
+      <rect id="window-right" x="538" y="332" width="28" height="24" rx="2" fill="#5CD4FF" />
+    </g>
+    <path
+      id="bolt"
+      d="M524 286 L494 334 h28 l-12 62 54-82 h-30 l18-28z"
+      fill="#5CD4FF"
+    />
+  </g>
+</svg>
