@@ -52,6 +52,7 @@ nginx -t && systemctl reload nginx
 | `.env` local (desarrollo) | `lumtek-web/.env` (copiar de `.env.example`) |
 | `.env` producción (plantilla) | `lumtek-web/deploy/env.production.template` |
 | Guía VPS detallada | [`docs/VPS.md`](docs/VPS.md) |
+| **Mapa infraestructura** (header, hero, footer, todo) | [`docs/INFRAESTRUCTURA.md`](docs/INFRAESTRUCTURA.md) |
 | Nginx plantilla | `lumtek-web/deploy/nginx-site.conf.template` |
 
 ---
@@ -144,4 +145,4 @@ bash deploy/deploy-api.sh
 
 ---
 
-Documentación ampliada: [`docs/VPS.md`](docs/VPS.md) · App web: [`lumtek-web/README.md`](lumtek-web/README.md)
+Documentación ampliada: [`docs/INFRAESTRUCTURA.md`](docs/INFRAESTRUCTURA.md) · [`docs/VPS.md`](docs/VPS.md) · [`lumtek-web/README.md`](lumtek-web/README.md)

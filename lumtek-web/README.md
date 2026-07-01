@@ -5,6 +5,7 @@ Landing de **Lumtek** — domótica, sistemas inteligentes, videovigilancia e Io
 Stack: React 19 · TypeScript · Vite · Tailwind · Framer Motion · React Router.
 
 **Montaje completo en VPS (dominio nip.io + Nginx + SSL):** [`../docs/VPS.md`](../docs/VPS.md)  
+**Mapa infraestructura (header, hero, footer, API…):** [`../docs/INFRAESTRUCTURA.md`](../docs/INFRAESTRUCTURA.md)  
 **Deploy rápido:** `bash deploy/deploy.sh` (tras `npm install` y build)
 
 ---
@@ -107,7 +108,7 @@ certbot renew --dry-run   # comprobar renovación SSL
 |------|---------|
 | `/` | `src/pages/HomePage.tsx` |
 | `/contacto` | `src/pages/ContactPage.tsx` |
-| `/casos/:slug` | `src/pages/UseCasePage.tsx` |
+| `/aplicaciones/:slug` | `src/pages/UseCasePage.tsx` |
 | Aviso / privacidad / cookies | `src/pages/LegalNoticePage.tsx`, etc. |
 
 ### Secciones de la home
@@ -197,7 +198,7 @@ En local: `npm run dev` + `npm run dev:api`. Probar plantillas: `node server/con
 | `/politica-privacidad` | Privacidad |
 | `/politica-cookies` | Cookies |
 | `/configuracion-cookies` | Panel cookies |
-| `/casos/:slug` | Página por caso de uso |
+| `/aplicaciones/:slug` | Página por caso de uso |
 
 ---
 
