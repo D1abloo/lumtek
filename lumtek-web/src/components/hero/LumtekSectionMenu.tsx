@@ -128,7 +128,7 @@ const SectionMenuItem = ({
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
         aria-label={`${title}. ${description}`}
-        className={`group relative flex w-full items-center gap-2 overflow-hidden rounded-2xl border px-2 py-2 text-left shadow-[0_4px_16px_rgba(0,168,255,0.06)] backdrop-blur-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lumtek-blue ${
+        className={`group relative flex w-full items-center gap-2 rounded-2xl border px-2 py-2 text-left shadow-[0_4px_16px_rgba(0,168,255,0.06)] backdrop-blur-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lumtek-blue ${
           hovered
             ? 'border-lumtek-blue/35 bg-white/95 shadow-[0_6px_20px_rgba(0,168,255,0.14)]'
             : 'border-white/60 bg-white/75'
@@ -141,7 +141,7 @@ const SectionMenuItem = ({
         <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-lumtek-blue/12 to-lumtek-cyan/8 ring-1 ring-lumtek-blue/15 transition-all duration-300 group-hover:shadow-[0_0_14px_rgba(0,168,255,0.35)]">
           <SectionAppLogo id={id} className="h-5 w-5" glow />
         </span>
-        <span className="phone-text-crisp relative z-10 min-w-0 flex-1 leading-snug">
+        <span className="phone-text-crisp relative z-10 min-w-0 flex-1 overflow-hidden leading-snug">
           <AnimatePresence mode="wait" initial={false}>
             {hovered ? (
               <motion.span
@@ -155,10 +155,10 @@ const SectionMenuItem = ({
               >
                 <AnimatedLetters
                   text={sectionTitle}
-                  className="font-app block text-[11px] font-semibold tracking-normal text-lumtek-blue"
+                  className="font-app block line-clamp-1 text-[11px] font-semibold tracking-normal text-lumtek-blue"
                   stagger={0.02}
                 />
-                <span className="font-app-body mt-0.5 block text-[10px] font-medium text-slate-600">
+                <span className="font-app-body mt-0.5 block line-clamp-2 text-[9px] font-medium leading-snug text-slate-600">
                   {detailDescription}
                 </span>
               </motion.span>
@@ -171,10 +171,10 @@ const SectionMenuItem = ({
                 exit={reduced ? undefined : { opacity: 0, x: -4 }}
                 transition={{ duration: 0.2, ease }}
               >
-                <span className="font-app block whitespace-nowrap text-[12px] font-semibold tracking-normal text-slate-900">
+                <span className="font-app block truncate text-[11px] font-semibold tracking-normal text-slate-900">
                   {title}
                 </span>
-                <span className="font-app-body mt-0.5 block text-[10px] font-medium text-slate-600">
+                <span className="font-app-body mt-0.5 block line-clamp-2 text-[9px] font-medium leading-snug text-slate-600">
                   {description}
                 </span>
               </motion.span>
@@ -199,16 +199,16 @@ export const LumtekSectionMenu = ({ onSelect, canForward, onForward }: LumtekSec
     <div className="relative flex h-full flex-col overflow-hidden bg-[#f2f8fd] phone-text-crisp">
       <MountainBackdrop />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-3 pb-14 pt-3">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-2.5 pb-14 pt-2">
         <motion.div
-          className="pointer-events-none mb-3 h-px w-12 bg-gradient-to-r from-transparent via-lumtek-blue/40 to-transparent"
+          className="pointer-events-none mb-2 h-px w-12 bg-gradient-to-r from-transparent via-lumtek-blue/40 to-transparent"
           initial={reduced ? false : { scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.08, ease }}
           aria-hidden
         />
         <motion.ul
-          className="flex w-full max-w-[16.5rem] flex-col items-stretch gap-1.5"
+          className="flex w-full flex-col items-stretch gap-1.5"
           variants={reduced ? undefined : listVariants}
           initial={reduced ? false : 'hidden'}
           animate="show"

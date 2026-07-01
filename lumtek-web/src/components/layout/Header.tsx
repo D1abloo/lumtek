@@ -40,15 +40,14 @@ export const Header = () => {
         <Link
           to="/"
           onClick={handleHomeNav}
-          className="inline-flex min-w-0 shrink-0 items-center justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue"
+          className="inline-flex shrink-0 items-center justify-self-start overflow-visible transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lumtek-blue"
           aria-label="Lumtek, ir al inicio"
         >
           <LumtekLogo
             size="md"
             variant="wordmark"
             asLink={false}
-            showMark={false}
-            className="min-w-0 overflow-visible max-md:[&_span]:text-lg md:[&_span]:text-2xl"
+            className="shrink-0 gap-1.5 text-lg sm:gap-2 sm:text-xl md:text-2xl"
           />
         </Link>
 

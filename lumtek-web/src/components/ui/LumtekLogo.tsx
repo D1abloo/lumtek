@@ -53,9 +53,9 @@ const wordmarkClass = {
 } as const
 
 const logoHeightMap = {
-  sm: 22,
-  md: 26,
-  lg: 34,
+  sm: 24,
+  md: 30,
+  lg: 40,
 } as const
 
 type AccentLetterProps = {
@@ -306,8 +306,13 @@ const LogoMark = ({
 
   if (variant === 'wordmark') {
     return (
-      <div className={`flex items-center overflow-visible ${className}`}>
-        <ColoredWordmark size={size} staticWordmark={staticWordmark} showMark={showMark} />
+      <div className="flex items-center overflow-visible">
+        <ColoredWordmark
+          size={size}
+          staticWordmark={staticWordmark}
+          showMark={showMark}
+          className={className}
+        />
       </div>
     )
   }

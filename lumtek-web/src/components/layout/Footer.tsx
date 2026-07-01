@@ -37,7 +37,7 @@ export const Footer = () => {
               variant="wordmark"
               staticWordmark
               asLink
-              className="overflow-visible"
+              className="shrink-0 gap-2 overflow-visible text-xl sm:text-2xl"
               onHomeClick={handleHomeClick}
             />
             <p className="mt-4 text-sm leading-relaxed text-lumtek-text-secondary">

@@ -1,12 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { AppSection } from '../../data/appSections'
 import { getHotspotLabelClasses, getSectionHotspotMap } from '../../data/sectionHotspots'
 import { usePhoneImageLoad } from '../../hooks/useImageLoadProgress'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { getBestTooltipPosition } from '../../utils/getBestTooltipPosition'
 import { LightningLoadOverlay } from '../ui/LightningLoadOverlay'
 
 const ease = [0.22, 1, 0.36, 1] as const
+const FILL_TOOLTIP_W = 136
+const FILL_TOOLTIP_H = 56
+const FILL_TOP_SAFE = 58
+const FILL_BOTTOM_SAFE = 46
+const FILL_PAD = 8
 
 type SectionInteractiveImageProps = {
   section: AppSection
@@ -31,6 +37,8 @@ export const SectionInteractiveImage = ({
   const [hoverCapable, setHoverCapable] = useState(false)
   const showImage = loaded && !visible
   const imgRef = useRef<HTMLImageElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const [fillTooltip, setFillTooltip] = useState<{ x: number; y: number; w: number } | null>(null)
 
   useEffect(() => {
     setSrc(section.image)
@@ -53,6 +61,32 @@ export const SectionInteractiveImage = ({
   const active = map?.hotspots.find((h) => h.id === activeId)
   const ActiveIcon = active?.icon
 
+  useLayoutEffect(() => {
+    if (!fill || !active || !stageRef.current) {
+      setFillTooltip(null)
+      return
+    }
+    const rect = stageRef.current.getBoundingClientRect()
+    const tooltipW = Math.min(FILL_TOOLTIP_W, Math.floor(rect.width - FILL_PAD * 2))
+    const hx = (active.x / 100) * rect.width
+    const hy = (active.y / 100) * rect.height
+    const pos = getBestTooltipPosition(
+      rect.width,
+      rect.height,
+      hx,
+      hy,
+      14,
+      tooltipW,
+      FILL_TOOLTIP_H,
+    )
+    const x = Math.max(FILL_PAD, Math.min(pos.x, rect.width - tooltipW - FILL_PAD))
+    const y = Math.max(
+      FILL_TOP_SAFE,
+      Math.min(pos.y, rect.height - FILL_BOTTOM_SAFE - FILL_TOOLTIP_H),
+    )
+    setFillTooltip({ x, y, w: tooltipW })
+  }, [fill, active])
+
   const handleActivate = useCallback(
     (id: string) => {
       if (hoverCapable) setActiveId(id)
@@ -71,6 +105,7 @@ export const SectionInteractiveImage = ({
       className={`relative overflow-hidden bg-[#060a10] ${fill ? 'h-full min-h-0' : 'rounded-xl ring-1 ring-lumtek-blue/35'} ${className}`}
     >
       <div
+        ref={stageRef}
         className={`relative w-full overflow-hidden ${
           fill
             ? 'h-full min-h-0'
@@ -184,26 +219,22 @@ export const SectionInteractiveImage = ({
               </motion.span>
 
               <AnimatePresence>
-                {isActive && (
+                {isActive && !fill && (
                   <motion.span
                     key={`label-${spot.id}`}
                     role="status"
-                    initial={{ opacity: 0, y: fill ? 6 : spot.y < 42 ? -6 : 6, scale: 0.94 }}
+                    initial={{ opacity: 0, y: spot.y < 42 ? -6 : 6, scale: 0.94 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: fill ? 4 : spot.y < 42 ? -4 : 4, scale: 0.96 }}
+                    exit={{ opacity: 0, y: spot.y < 42 ? -4 : 4, scale: 0.96 }}
                     transition={{ duration: 0.28, ease }}
-                    className={`phone-text-crisp pointer-events-none absolute z-30 rounded-lg border border-lumtek-cyan/35 bg-[#0a1018]/94 px-1.5 py-1 shadow-[0_8px_24px_rgba(0,0,0,0.45),0_0_16px_rgba(0,168,255,0.2)] backdrop-blur-md ${
-                      fill ? 'w-[4.75rem]' : 'w-[8.25rem]'
-                    } ${labelClass}`}
+                    className={`phone-text-crisp pointer-events-none absolute z-30 w-[8.25rem] rounded-lg border border-lumtek-cyan/35 bg-[#0a1018]/94 px-2 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.45),0_0_16px_rgba(0,168,255,0.2)] backdrop-blur-md ${labelClass}`}
                   >
                     {spot.tag && (
                       <motion.span
                         initial={{ opacity: 0, x: -4 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.05, duration: 0.25, ease }}
-                        className={`block truncate font-semibold uppercase tracking-[0.1em] text-lumtek-cyan/80 ${
-                          fill ? 'text-[6px]' : 'text-[8px]'
-                        }`}
+                        className="block truncate text-[8px] font-semibold uppercase tracking-[0.1em] text-lumtek-cyan/80"
                       >
                         {spot.tag}
                       </motion.span>
@@ -212,9 +243,7 @@ export const SectionInteractiveImage = ({
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.08, duration: 0.28, ease }}
-                      className={`block truncate font-semibold leading-snug text-white ${
-                        fill ? 'text-[9px]' : 'text-[10px]'
-                      }`}
+                      className="block truncate text-[10px] font-semibold leading-snug text-white"
                     >
                       {spot.label}
                     </motion.span>
@@ -222,9 +251,7 @@ export const SectionInteractiveImage = ({
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.12, duration: 0.28, ease }}
-                      className={`mt-0.5 block line-clamp-2 leading-snug text-slate-400 ${
-                        fill ? 'text-[8px]' : 'text-[9px]'
-                      }`}
+                      className="mt-0.5 block line-clamp-2 text-[9px] leading-snug text-slate-400"
                     >
                       {spot.description}
                     </motion.span>
@@ -234,6 +261,37 @@ export const SectionInteractiveImage = ({
             </motion.button>
           )
         })}
+
+        <AnimatePresence>
+          {fill && active && fillTooltip && (
+            <motion.div
+              key={`fill-tip-${active.id}`}
+              role="status"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.24, ease }}
+              className="phone-text-crisp pointer-events-none absolute z-40 rounded-lg border border-lumtek-cyan/40 bg-[#0a1018]/96 px-2 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_16px_rgba(0,168,255,0.22)] backdrop-blur-md"
+              style={{
+                left: fillTooltip.x,
+                top: fillTooltip.y,
+                width: fillTooltip.w,
+              }}
+            >
+              {active.tag && (
+                <p className="truncate text-[8px] font-semibold uppercase tracking-[0.1em] text-lumtek-cyan/85">
+                  {active.tag}
+                </p>
+              )}
+              <p className="truncate text-[11px] font-semibold leading-tight text-white">
+                {active.label}
+              </p>
+              <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-slate-300">
+                {active.description}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {active && ActiveIcon && !fill && (
