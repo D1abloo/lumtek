@@ -136,4 +136,12 @@ bash deploy/deploy-api.sh
 
 ---
 
+## Estado del proyecto
+
+**Versión entregada:** sitio responsive (móvil, tablet, escritorio), PWA instalable con guía en el footer, formulario de contacto con correos automáticos (staff + cliente), desplegado en VPS.
+
+**Producción:** https://lumtek.31.70.109.174.nip.io
+
+---
+
 Documentación ampliada: [`docs/VPS.md`](docs/VPS.md) · App web: [`lumtek-web/README.md`](lumtek-web/README.md)

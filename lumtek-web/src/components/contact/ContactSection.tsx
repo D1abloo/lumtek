@@ -23,7 +23,7 @@ export const ContactSection = ({
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,168,255,0.05),transparent_60%)]" />
 
       <div className="relative mx-auto max-w-7xl section-x">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
+        <div className="grid gap-8 md:grid-cols-2 md:items-start md:gap-10 lg:gap-12">
           <AnimatedReveal>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-lumtek-blue sm:text-xs sm:tracking-[0.2em]">
               Contacto

@@ -20,7 +20,7 @@ const sizeMap = {
   compact: 'w-[188px] xs:w-[200px] sm:w-[216px]',
   default: 'w-[208px] xs:w-[220px] sm:w-[240px]',
   showcase: 'w-[220px] xs:w-[232px] sm:w-[252px] md:w-[260px] lg:w-[268px]',
-  hero: 'w-[236px] xs:w-[248px] sm:w-[268px] md:w-[284px] lg:w-[298px] xl:w-[310px]',
+  hero: 'w-[220px] xs:w-[236px] sm:w-[252px] md:w-[268px] lg:w-[286px] xl:w-[300px]',
 }
 
 const PhoneSunSideGlow = ({ reduced, active }: { reduced: boolean; active: boolean }) => (

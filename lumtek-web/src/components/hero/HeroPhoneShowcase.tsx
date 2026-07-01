@@ -5,7 +5,7 @@ export const HeroPhoneShowcase = () => {
   const lock = usePhoneLock(true)
 
   return (
-    <div className="relative mx-auto flex w-full min-w-0 justify-center lg:justify-end">
+    <div className="relative mx-auto flex w-full min-w-0 max-w-full justify-center md:justify-end">
       <PhoneDemo
         size="hero"
         imageSrc={HERO_SCREEN.src}

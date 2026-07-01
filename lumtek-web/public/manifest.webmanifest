@@ -1,11 +1,12 @@
 {
   "id": "/",
-  "name": "Lumtek",
+  "name": "Lumtek — Domótica y sistemas inteligentes",
   "short_name": "Lumtek",
   "description": "Domótica, videovigilancia, control de accesos, sensores y automatización para viviendas, empresas y edificios.",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "browser"],
   "orientation": "any",
   "lang": "es",
   "dir": "ltr",
@@ -30,6 +31,21 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Contacto",
+      "short_name": "Contacto",
+      "description": "Formulario de contacto Lumtek",
+      "url": "/contacto?source=pwa",
+      "icons": [
+        {
+          "src": "/images/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

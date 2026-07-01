@@ -36,7 +36,7 @@ export const Header = () => {
           : 'bg-white/70 backdrop-blur-sm'
       }`}
     >
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-3 overflow-visible px-4 py-2.5 max-md:grid-cols-[1fr_auto] md:grid-cols-[auto_1fr_auto] sm:px-6 lg:gap-6 lg:px-8 lg:py-3">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-visible px-3 py-2.5 xs:gap-3 xs:px-4 md:grid-cols-[auto_1fr_auto] sm:px-6 lg:gap-6 lg:px-8 lg:py-3">
         <Link
           to="/"
           onClick={handleHomeNav}

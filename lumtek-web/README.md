@@ -149,6 +149,8 @@ certbot renew --dry-run   # comprobar renovación SSL
 | Montaña del móvil | `public/images/hero/montana.webp` (regenerar: `python3 scripts/build-montaña-webp.py`) |
 | Captura domótica del móvil | `public/images/hero/domotica.webp` |
 | Favicon, PWA | `public/favicon.svg`, `public/manifest.webmanifest`, `public/sw.js` |
+| Guía instalar PWA (footer) | `src/components/layout/PwaInstallGuide.tsx` |
+| Hook instalación PWA | `src/hooks/usePwaInstall.ts` |
 | Estilos globales, utilidades Tailwind | `src/index.css`, `tailwind.config.js` |
 
 ### UI reutilizable
@@ -196,6 +198,23 @@ En local: `npm run dev` + `npm run dev:api`. Probar plantillas: `node server/con
 | `/politica-cookies` | Cookies |
 | `/configuracion-cookies` | Panel cookies |
 | `/casos/:slug` | Página por caso de uso |
+
+---
+
+## PWA (aplicación instalable)
+
+La web es una **Progressive Web App**: se puede añadir a la pantalla de inicio en móvil y tablet o instalar en escritorio.
+
+| Archivo | Rol |
+|---------|-----|
+| `public/manifest.webmanifest` | Nombre, iconos, tema, atajos |
+| `public/sw.js` | Caché offline básica |
+| `src/registerPwa.ts` | Registro del service worker |
+| `src/components/layout/PwaInstallGuide.tsx` | Instrucciones en el pie de página (con logo) |
+
+**Probar en Chrome:** F12 → icono de dispositivo → elegir iPhone, iPad o dimensiones responsive. En escritorio, busca el icono de instalación en la barra de direcciones.
+
+**Breakpoints Tailwind:** `xs` 375 · `sm` 640 · `md` 768 (tablet) · `lg` 1024 · `xl` 1280 · `2xl` 1536
 
 ---
 

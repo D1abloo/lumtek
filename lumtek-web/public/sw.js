@@ -1,4 +1,4 @@
-const CACHE = 'lumtek-pwa-v1'
+const CACHE = 'lumtek-pwa-v2'
 
 const PRECACHE_URLS = [
   '/',
@@ -9,6 +9,8 @@ const PRECACHE_URLS = [
   '/apple-touch-icon.png',
   '/images/brand/icon-192.png',
   '/images/brand/icon-512.png',
+  '/images/brand/lumtek-logo.webp',
+  '/contacto',
 ]
 
 self.addEventListener('install', (event) => {

@@ -18,23 +18,23 @@ export const Hero = () => {
       <HeroVisualBackground />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl section-x">
-        <div className="grid items-center gap-8 sm:gap-10 md:gap-12 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-          <div className="order-2 text-center lg:order-1 lg:text-left">
+        <div className="grid items-center gap-8 sm:gap-10 md:grid-cols-2 md:gap-10 lg:gap-12 xl:gap-16">
+          <div className="order-2 text-center md:order-1 md:text-left">
             <AnimatedReveal>
-              <h1 className="mx-auto max-w-3xl text-[1.75rem] font-bold leading-[1.14] tracking-tight text-lumtek-text sm:max-w-2xl sm:text-4xl md:text-[2.5rem] md:leading-[1.1] lg:mx-0 lg:max-w-xl xl:max-w-2xl xl:text-[2.65rem]">
+              <h1 className="mx-auto max-w-3xl text-[1.65rem] font-bold leading-[1.14] tracking-tight text-lumtek-text xs:text-[1.75rem] sm:max-w-2xl sm:text-4xl md:mx-0 md:max-w-xl md:text-[2.35rem] md:leading-[1.1] xl:max-w-2xl xl:text-[2.65rem]">
                 {hero.title}
               </h1>
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.06}>
-              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-lumtek-text-secondary sm:mt-5 sm:max-w-2xl sm:text-lg lg:mx-0">
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-lumtek-text-secondary sm:mt-5 sm:max-w-2xl sm:text-lg md:mx-0">
                 {hero.subtitle}
               </p>
             </AnimatedReveal>
 
             <AnimatedReveal
               delay={0.12}
-              className="mt-6 flex flex-col items-stretch gap-3 sm:mt-7 sm:flex-row sm:items-center sm:justify-center lg:justify-start"
+              className="mt-6 flex flex-col items-stretch gap-3 sm:mt-7 sm:flex-row sm:items-center sm:justify-center md:justify-start"
             >
               <GlowButton href="/#servicios" variant="primary" cursorFill={false} className="w-full sm:w-auto">
                 Ver soluciones
@@ -46,7 +46,7 @@ export const Hero = () => {
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.18} className="mt-7 sm:mt-8">
-              <ul className="grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-x-4 xs:gap-y-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-6 lg:justify-start">
+              <ul className="grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-x-4 xs:gap-y-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-6 md:justify-start">
                 {hero.highlights.map((item, i) => {
                   const Icon = highlightIcons[i]
                   return (
@@ -63,7 +63,7 @@ export const Hero = () => {
             </AnimatedReveal>
           </div>
 
-          <AnimatedReveal delay={0.06} className="order-1 w-full min-w-0 lg:order-2 lg:flex lg:justify-end">
+          <AnimatedReveal delay={0.06} className="order-1 w-full min-w-0 md:order-2 md:flex md:justify-end">
             <HeroPhoneShowcase />
           </AnimatedReveal>
         </div>

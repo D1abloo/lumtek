@@ -35,7 +35,7 @@ const validate = (data: ContactFormData): ContactFormErrors => {
 }
 
 const inputClass =
-  'w-full rounded-xl border border-lumtek-border bg-white px-4 py-3 text-base text-lumtek-text placeholder:text-slate-400 transition-all focus:border-lumtek-blue focus:outline-none focus:ring-2 focus:ring-lumtek-blue/20 sm:text-sm'
+  'w-full min-w-0 rounded-xl border border-lumtek-border bg-white px-4 py-3 text-base text-lumtek-text placeholder:text-slate-400 transition-all focus:border-lumtek-blue focus:outline-none focus:ring-2 focus:ring-lumtek-blue/20 sm:text-sm'
 
 type ContactFormProps = {
   compact?: boolean
@@ -118,7 +118,7 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      <div className={compact ? 'space-y-4' : 'grid gap-4 sm:grid-cols-2'}>
+      <div className={compact ? 'space-y-4' : 'grid gap-4 sm:grid-cols-2 md:gap-5'}>
         <Field label="Nombre *" error={errors.name}>
           <input
             className={inputClass}

@@ -3,6 +3,7 @@ import { MapPin, MessageSquare, Phone } from 'lucide-react'
 import { siteContent } from '../../data/siteContent'
 import { scrollToTop } from '../../utils/scroll'
 import { HeaderBrand } from './HeaderBrand'
+import { PwaInstallGuide } from './PwaInstallGuide'
 
 const footerNav = [
   { label: 'Inicio', to: '/' },
@@ -28,9 +29,9 @@ export const Footer = () => {
   }
 
   return (
-    <footer className="border-t border-lumtek-border bg-lumtek-surface py-12 pb-safe sm:py-16">
+    <footer className="border-t border-lumtek-border bg-lumtek-surface py-10 pb-safe sm:py-14 md:py-16">
       <div className="mx-auto max-w-7xl section-x">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link
               to="/"
@@ -108,7 +109,11 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-lumtek-border pt-8 text-center text-xs text-lumtek-text-secondary">
+        <div className="mt-8 sm:mt-10 md:mt-12">
+          <PwaInstallGuide />
+        </div>
+
+        <div className="mt-8 border-t border-lumtek-border pt-6 text-center text-xs text-lumtek-text-secondary sm:mt-10 sm:pt-8">
           © {new Date().getFullYear()} Lumtek. Todos los derechos reservados.
         </div>
       </div>
