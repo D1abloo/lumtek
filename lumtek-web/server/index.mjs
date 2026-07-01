@@ -4,6 +4,7 @@ import express from 'express'
 import nodemailer from 'nodemailer'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { buildClientEmail, buildStaffEmail } from './contactEmail.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
@@ -16,6 +17,7 @@ const smtpUser = process.env.SMTP_USER || 'juanf.delgado@lumtek.es'
 const smtpPass = process.env.SMTP_PASS
 const mailTo = process.env.MAIL_TO || smtpUser
 const mailFromName = process.env.MAIL_FROM_NAME || 'Lumtek Web'
+const sendClientConfirm = process.env.MAIL_CLIENT_CONFIRM !== 'false'
 
 const smtpOptions = {
   host: smtpHost,
@@ -63,30 +65,30 @@ app.post('/api/contact', async (req, res) => {
   }
 
   const { name, email, phone, projectType, message, company, city, contactPreference } = req.body
-
-  const text = [
-    `Nombre: ${name}`,
-    `Email: ${email}`,
-    `Teléfono: ${phone}`,
-    `Tipo de proyecto: ${projectType}`,
-    company ? `Empresa: ${company}` : null,
-    city ? `Localidad: ${city}` : null,
-    contactPreference ? `Preferencia de contacto: ${contactPreference}` : null,
-    '',
-    'Mensaje:',
-    message,
-  ]
-    .filter(Boolean)
-    .join('\n')
+  const payload = { name, email, phone, projectType, message, company, city, contactPreference }
+  const staff = buildStaffEmail(payload)
+  const client = buildClientEmail(payload)
 
   try {
     await transporter.sendMail({
       from: `"${mailFromName}" <${smtpUser}>`,
       to: mailTo,
       replyTo: email,
-      subject: `[Lumtek] ${projectType} — ${name}`,
-      text,
+      subject: staff.subject,
+      text: staff.text,
+      html: staff.html,
     })
+
+    if (sendClientConfirm) {
+      await transporter.sendMail({
+        from: `"${mailFromName}" <${smtpUser}>`,
+        to: email,
+        subject: client.subject,
+        text: client.text,
+        html: client.html,
+      })
+    }
+
     return res.json({ ok: true })
   } catch (err) {
     console.error('SMTP error:', err)

@@ -16,13 +16,17 @@ Stack: React 19 · TypeScript · Vite · Tailwind · Framer Motion · React Rout
 | URL | https://lumtek.31.70.109.174.nip.io |
 | Servidor | `root@31.70.109.174` (Ubuntu) |
 | Web estática | `/var/www/lumtek` |
+| API contacto (Node) | `/var/www/lumtek-app` |
+| `.env` SMTP producción | `/var/www/lumtek-app/.env` |
+| Plantillas correo | `/var/www/lumtek-app/server/contactEmail.mjs` |
 | Nginx site | `/etc/nginx/sites-available/lumtek` → `sites-enabled/lumtek` |
+| Servicio API | `systemctl status lumtek-api` |
 | SSL | Let's Encrypt (Certbot), renueva solo |
 | Dominio | [nip.io](https://nip.io) gratuito (`lumtek.31.70.109.174.nip.io` → IP del VPS) |
 
-Nginx sirve el build de Vite como SPA (`try_files` → `index.html`). Los assets (`.js`, `.css`, imágenes) tienen caché de 7 días.
+Nginx sirve el build de Vite como SPA (`try_files` → `index.html`) y hace **proxy de `/api/`** al proceso Node en el puerto `3001`.
 
-**Formulario de contacto en producción:** el deploy actual es solo estático. El endpoint `/api/contact` vive en `server/index.mjs` (Node) y **no está desplegado** en la VPS. Para que el formulario envíe correo hay que levantar ese servidor (o proxy nginx → Node) y configurar `SMTP_PASS` en `.env`. Ver sección [API de contacto](#api-de-contacto).
+**Formulario de contacto:** API desplegada en `/var/www/lumtek-app`. Solo falta `SMTP_PASS` en `.env` del servidor. Ver [API de contacto](#api-de-contacto) y [`../README.md`](../README.md).
 
 ---
 
@@ -48,21 +52,20 @@ Recarga forzada si no ves cambios en el navegador: `Ctrl+Shift+R`.
 
 ## Desplegar cambios en la VPS
 
-Desde tu máquina, en `lumtek-web`:
-
 ```bash
-npm run build
-scp -r dist/. root@31.70.109.174:/var/www/lumtek/
-ssh root@31.70.109.174 "chown -R www-data:www-data /var/www/lumtek"
+cd lumtek-web
+bash deploy/deploy-all.sh    # front + API
+# o por separado:
+bash deploy/deploy.sh        # solo estático
+bash deploy/deploy-api.sh    # solo API / correos
 ```
 
 Comprobar:
 
 ```bash
 curl -sI https://lumtek.31.70.109.174.nip.io/ | head -3
+curl -s https://lumtek.31.70.109.174.nip.io/api/health
 ```
-
-Abrir la URL y recargar con `Ctrl+Shift+R` (la caché de JS/CSS puede ocultar el bundle nuevo).
 
 ### Si tocas nginx o SSL (raro)
 
@@ -161,18 +164,24 @@ certbot renew --dry-run   # comprobar renovación SSL
 | Qué | Archivo |
 |-----|---------|
 | Servidor Express + SMTP | `server/index.mjs` |
+| **Plantillas correo** (interno + cliente) | `server/contactEmail.mjs` |
 | Cliente del formulario | `src/services/contactService.ts` |
-| Variables de entorno | `.env` (copiar de `.env.example`) |
+| Variables entorno local | `.env` (copiar de `.env.example`) |
+| Plantilla `.env` producción | `deploy/env.production.template` |
+| Deploy API | `deploy/deploy-api.sh` |
 
-Variables típicas en `.env`:
+Variables en `.env` / `/var/www/lumtek-app/.env`:
 
 ```env
-VITE_CONTACT_ENDPOINT=/api/contact
-SMTP_PASS=...
+SMTP_USER=juanf.delgado@lumtek.es
+SMTP_PASS=...                    # contraseña del buzón GoDaddy
 MAIL_TO=juanf.delgado@lumtek.es
+MAIL_CLIENT_CONFIRM=true         # correo automático al cliente
 ```
 
-En local: `npm run dev` + `npm run dev:api`. En producción con Node: `npm run build && npm start` (puerto `3001` por defecto) y proxy nginx de `/api` al proceso Node.
+Editar textos del correo: `server/contactEmail.mjs` → `bash deploy/deploy-api.sh`.
+
+En local: `npm run dev` + `npm run dev:api`. Probar plantillas: `node server/contactEmail.mjs`.
 
 ---
 

@@ -16,7 +16,7 @@ ssh "${HOST}" "mkdir -p '${APP_DIR}'"
 
 scp -q "${WEB_ROOT}/package.json" "${WEB_ROOT}/package-lock.json" "${HOST}:${APP_DIR}/"
 scp -q -r "${WEB_ROOT}/server" "${HOST}:${APP_DIR}/"
-scp -q "${DEPLOY_DIR}/env.production.template" "${HOST}:${APP_DIR}/.env"
+scp -q "${DEPLOY_DIR}/env.production.template" "${HOST}:/tmp/lumtek-env.production.template"
 
 ssh "${HOST}" APP_DIR="${APP_DIR}" NGINX_SITE="${NGINX_SITE}" bash -s <<'REMOTE'
 set -euo pipefail
@@ -30,6 +30,12 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 
 cd "$APP_DIR"
+if [ ! -f "$APP_DIR/.env" ]; then
+  cp /tmp/lumtek-env.production.template "$APP_DIR/.env"
+  echo "==> Creado $APP_DIR/.env (rellena SMTP_PASS)"
+else
+  echo "==> Conservando $APP_DIR/.env existente"
+fi
 npm ci --omit=dev
 chown -R www-data:www-data "$APP_DIR"
 chown root:www-data "$APP_DIR/.env"

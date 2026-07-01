@@ -11,10 +11,13 @@ Guía de cómo está montado el entorno de producción: servidor Ubuntu, dominio
 | **SSH** | `ssh root@31.70.109.174` |
 | **SO** | Ubuntu (servidor dedicado/VPS) |
 | **Web root** | `/var/www/lumtek` |
-| **Servidor HTTP** | Nginx |
+| **API contacto** | `/var/www/lumtek-app` (Node, systemd `lumtek-api`) |
+| **Plantillas correo** | `/var/www/lumtek-app/server/contactEmail.mjs` |
+| **`.env` SMTP** | `/var/www/lumtek-app/.env` |
+| **Servidor HTTP** | Nginx (+ proxy `/api/` → `:3001`) |
 | **SSL** | Let's Encrypt (Certbot), renovación automática |
 | **Dominio** | Subdominio nip.io (sin registrar dominio de pago) |
-| **Tipo de deploy** | Sitio estático (carpeta `dist/` de Vite) |
+| **Tipo de deploy** | Estático (`dist/`) + API Node (contacto / SMTP) |
 
 ---
 
@@ -55,7 +58,10 @@ Plantilla de env: [`lumtek-web/deploy/deploy.env.example`](../lumtek-web/deploy/
 Solo redesplegar código en VPS ya montada:
 
 ```bash
-bash deploy/deploy.sh
+bash deploy/deploy-all.sh     # front + API
+# o por separado:
+bash deploy/deploy.sh         # solo estático
+bash deploy/deploy-api.sh     # solo API / plantillas correo
 ```
 
 ### Manual
@@ -172,13 +178,16 @@ Los certificados se renuevan solos antes de caducar (cada ~90 días).
 
 ## 6. Desplegar actualizaciones (día a día)
 
-Cada vez que cambies el front:
-
 ```bash
 cd lumtek-web
-npm run build
-scp -r dist/. root@31.70.109.174:/var/www/lumtek/
-ssh root@31.70.109.174 "chown -R www-data:www-data /var/www/lumtek"
+bash deploy/deploy-all.sh
+```
+
+Solo front o solo API:
+
+```bash
+bash deploy/deploy.sh
+bash deploy/deploy-api.sh
 ```
 
 En el navegador: recarga forzada (`Ctrl+Shift+R`) por la caché de JS/CSS.
@@ -187,26 +196,66 @@ Verificar:
 
 ```bash
 curl -sI https://lumtek.31.70.109.174.nip.io/ | head -3
+curl -s https://lumtek.31.70.109.174.nip.io/api/health
 ```
 
 ---
 
-## 7. API de contacto (opcional, no desplegada aún)
+## 7. API de contacto y correos
 
-El formulario usa `/api/contact` (`lumtek-web/server/index.mjs`). El deploy actual es **solo estático**; el correo no se envía en producción hasta que:
+La API está desplegada en `/var/www/lumtek-app` como servicio `lumtek-api`.
 
-1. Se ejecute el servidor Node en el VPS (p. ej. puerto `3001` con systemd).
-2. Nginx haga proxy de `/api` → `http://127.0.0.1:3001`.
-3. Se configure `.env` con `SMTP_PASS`, `MAIL_TO`, etc.
+| Qué | Ruta en repo | Ruta en VPS |
+|-----|--------------|-------------|
+| Servidor Express | `lumtek-web/server/index.mjs` | `/var/www/lumtek-app/server/index.mjs` |
+| **Cuerpo de correos** | `lumtek-web/server/contactEmail.mjs` | `/var/www/lumtek-app/server/contactEmail.mjs` |
+| Variables SMTP | `lumtek-web/deploy/env.production.template` | `/var/www/lumtek-app/.env` |
 
-Ver [`lumtek-web/README.md`](../lumtek-web/README.md) sección API de contacto.
+Al enviar el formulario se mandan **dos correos**:
+1. **Interno** a `MAIL_TO` con todos los datos del cliente (`buildStaffEmail`).
+2. **Confirmación al cliente** con resumen y agradecimiento (`buildClientEmail`).
+
+Desactivar correo al cliente: `MAIL_CLIENT_CONFIRM=false` en `.env`.
+
+### Activar SMTP (GoDaddy)
+
+```bash
+ssh root@31.70.109.174
+nano /var/www/lumtek-app/.env
+```
+
+```env
+SMTP_USER=juanf.delgado@lumtek.es
+SMTP_PASS=contraseña-del-buzón
+MAIL_TO=juanf.delgado@lumtek.es
+MAIL_CLIENT_CONFIRM=true
+```
+
+```bash
+systemctl restart lumtek-api
+curl -s https://lumtek.31.70.109.174.nip.io/api/health
+# debe mostrar smtp: true
+```
+
+### Editar textos del correo
+
+1. Editar `lumtek-web/server/contactEmail.mjs` en local.
+2. Probar: `node server/contactEmail.mjs`
+3. Desplegar: `bash deploy/deploy-api.sh`
+
+Ver también [`../README.md`](../README.md) y [`lumtek-web/README.md`](../lumtek-web/README.md).
 
 ---
 
 ## 8. Estructura en el servidor
 
 ```text
-/var/www/lumtek/          # Build Vite (dist/)
+/var/www/lumtek/                    # Build Vite (dist/)
+/var/www/lumtek-app/                # API Node (contacto + SMTP)
+  server/index.mjs
+  server/contactEmail.mjs           # plantillas correo interno + cliente
+  .env                              # SMTP_PASS, MAIL_TO, etc.
+/etc/systemd/system/lumtek-api.service
 /etc/nginx/sites-available/lumtek
 /etc/nginx/sites-enabled/lumtek → ../sites-available/lumtek
 /etc/letsencrypt/live/lumtek.31.70.109.174.nip.io/
@@ -224,6 +273,8 @@ Ver [`lumtek-web/README.md`](../lumtek-web/README.md) sección API de contacto.
 | Certificado inválido | `certbot certificates`, renovar con `certbot renew` |
 | Cambios no se ven | Caché del navegador; cabeceras `Cache-Control` en Nginx |
 | 404 en rutas `/contacto` | Falta `try_files ... /index.html` (SPA) |
+| `/api/health` falla | `systemctl status lumtek-api`, `journalctl -u lumtek-api -n 50` |
+| Correo no sale | `SMTP_PASS` en `/var/www/lumtek-app/.env`, reiniciar `lumtek-api` |
 | Dominio no resuelve | Comprobar que usas `lumtek.31.70.109.174.nip.io` (IP correcta en el nombre) |
 
 ---
@@ -241,5 +292,5 @@ Nginx :443 (TLS Let's Encrypt)
    │
    ├─ /          → /var/www/lumtek/index.html + SPA
    ├─ /assets/*  → archivos con caché
-   └─ /api/*     → (pendiente) proxy a Node :3001
+   └─ /api/*     → proxy a lumtek-api (Node :3001) → SMTP GoDaddy
 ```

@@ -2,42 +2,138 @@
 
 Repositorio del sitio web corporativo de **Lumtek** (domótica, sistemas inteligentes y seguridad).
 
-## Contenido
+**Producción:** https://lumtek.31.70.109.174.nip.io  
+**Servidor:** `ssh root@31.70.109.174`
 
-| Carpeta / doc | Descripción |
-|---------------|-------------|
-| [`lumtek-web/`](lumtek-web/) | Aplicación React + Vite (front y API de contacto) |
-| [`docs/VPS.md`](docs/VPS.md) | Montaje completo en VPS: dominio nip.io, Nginx y SSL gratuito |
-| [`lumtek-web/deploy/nginx-lumtek.conf`](lumtek-web/deploy/nginx-lumtek.conf) | Plantilla del virtual host Nginx |
+---
 
-## Producción
+## Mapa completo en la VPS (cambios manuales)
 
-- **URL:** https://lumtek.31.70.109.174.nip.io  
-- **Servidor:** `root@31.70.109.174`  
-- **Archivos web:** `/var/www/lumtek`
+| Qué | Ruta en el servidor |
+|-----|---------------------|
+| **Web estática** (HTML, JS, CSS, imágenes del build) | `/var/www/lumtek` |
+| **API de contacto** (Node + SMTP) | `/var/www/lumtek-app` |
+| **Variables SMTP** (solo falta `SMTP_PASS`) | `/var/www/lumtek-app/.env` |
+| **Plantillas de correo** | `/var/www/lumtek-app/server/contactEmail.mjs` |
+| **Servidor Express** | `/var/www/lumtek-app/server/index.mjs` |
+| **Nginx** (SSL + proxy `/api`) | `/etc/nginx/sites-available/lumtek` |
+| **Certificados SSL** | `/etc/letsencrypt/live/lumtek.31.70.109.174.nip.io/` |
+| **Servicio API** (systemd) | `/etc/systemd/system/lumtek-api.service` |
 
-## Desarrollo rápido
+### Comandos útiles en el servidor
+
+```bash
+# Ver estado de la API
+systemctl status lumtek-api
+journalctl -u lumtek-api -f
+
+# Tras editar .env (contraseña SMTP)
+nano /var/www/lumtek-app/.env
+systemctl restart lumtek-api
+curl https://lumtek.31.70.109.174.nip.io/api/health
+
+# Tras editar Nginx
+nginx -t && systemctl reload nginx
+```
+
+---
+
+## Mapa en el repositorio (código fuente)
+
+| Qué | Archivo / carpeta |
+|-----|-------------------|
+| App React + Vite | [`lumtek-web/`](lumtek-web/) |
+| Formulario contacto | `lumtek-web/src/components/contact/ContactForm.tsx` |
+| API + envío SMTP | `lumtek-web/server/index.mjs` |
+| **Cuerpo de correos** (interno + cliente) | `lumtek-web/server/contactEmail.mjs` |
+| Deploy front | `lumtek-web/deploy/deploy.sh` |
+| Deploy API | `lumtek-web/deploy/deploy-api.sh` |
+| Deploy todo | `lumtek-web/deploy/deploy-all.sh` |
+| `.env` local (desarrollo) | `lumtek-web/.env` (copiar de `.env.example`) |
+| `.env` producción (plantilla) | `lumtek-web/deploy/env.production.template` |
+| Guía VPS detallada | [`docs/VPS.md`](docs/VPS.md) |
+| Nginx plantilla | `lumtek-web/deploy/nginx-site.conf.template` |
+
+---
+
+## Desarrollo local
 
 ```bash
 cd lumtek-web
 npm install
-npm run dev
+cp .env.example .env    # rellena SMTP_PASS para probar envíos
+npm run dev             # front → :5173
+npm run dev:api         # API → :3001 (otra terminal)
 ```
 
-## Desplegar cambios
+Probar plantillas de correo:
+
+```bash
+node server/contactEmail.mjs
+```
+
+---
+
+## Desplegar en la VPS
+
+Desde tu máquina:
 
 ```bash
 cd lumtek-web
-bash deploy/deploy.sh
+bash deploy/deploy-all.sh
 ```
 
-### VPS nueva (montaje + deploy en un paso)
+Solo front o solo API:
 
 ```bash
-cd lumtek-web
-export LUMTEK_VPS_IP=203.0.113.10
+bash deploy/deploy.sh      # estático → /var/www/lumtek
+bash deploy/deploy-api.sh  # Node → /var/www/lumtek-app
+```
+
+### Primera vez / VPS nueva
+
+```bash
+export LUMTEK_VPS_IP=31.70.109.174
 export LUMTEK_CERTBOT_EMAIL=admin@ejemplo.com
 bash deploy/setup-and-deploy.sh
+bash deploy/deploy-api.sh
 ```
 
-Detalle paso a paso (manual, SSL, renovación): [`docs/VPS.md`](docs/VPS.md).
+### Activar correo (GoDaddy)
+
+En el servidor, edita `/var/www/lumtek-app/.env`:
+
+```env
+SMTP_USER=juanf.delgado@lumtek.es
+SMTP_PASS=tu-contraseña-del-buzón
+MAIL_TO=juanf.delgado@lumtek.es
+```
+
+```bash
+systemctl restart lumtek-api
+```
+
+Al enviar el formulario se mandan **dos correos**:
+1. **Interno** a `MAIL_TO` con todos los datos del cliente.
+2. **Confirmación al cliente** con resumen y mensaje de agradecimiento.
+
+Para desactivar el correo al cliente: `MAIL_CLIENT_CONFIRM=false` en `.env`.
+
+---
+
+## Editar el cuerpo de los correos
+
+Modifica `lumtek-web/server/contactEmail.mjs`:
+
+- `buildStaffEmail()` — correo que recibe Lumtek.
+- `buildClientEmail()` — confirmación automática al cliente.
+
+Tras cambiar, redespliega la API:
+
+```bash
+bash deploy/deploy-api.sh
+```
+
+---
+
+Documentación ampliada: [`docs/VPS.md`](docs/VPS.md) · App web: [`lumtek-web/README.md`](lumtek-web/README.md)
