@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { MapPin, MessageSquare, Phone } from 'lucide-react'
+import { Mail, MapPin, MessageSquare, Phone } from 'lucide-react'
 import { siteContent } from '../../data/siteContent'
 import { scrollToTop } from '../../utils/scroll'
 import { HeaderBrand } from './HeaderBrand'
@@ -96,6 +96,15 @@ export const Footer = () => {
                   <MessageSquare className="h-4 w-4 shrink-0" />
                   Formulario de contacto
                 </Link>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${siteContent.contact.email}`}
+                  className="flex items-center gap-2 text-sm text-lumtek-text-secondary transition-colors hover:text-lumtek-blue break-anywhere"
+                >
+                  <Mail className="h-4 w-4 shrink-0" />
+                  {siteContent.contact.email}
+                </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-lumtek-text-secondary">
                 <Phone className="h-4 w-4 shrink-0" />

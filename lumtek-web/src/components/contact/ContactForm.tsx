@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Loader2, Send, AlertCircle } from 'lucide-react'
 import type { ContactFormData, ContactFormErrors } from '../../types'
 import { projectTypes, contactPreferences } from '../../data/contactOptions'
+import { siteContent } from '../../data/siteContent'
 import { sendContactForm } from '../../services/contactService'
 import { MagneticButton } from '../ui/MagneticButton'
 
@@ -118,6 +119,17 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      <p className="rounded-xl border border-lumtek-border bg-lumtek-surface px-4 py-3 text-sm text-lumtek-text-secondary">
+        También puedes escribirnos directamente a{' '}
+        <a
+          href={`mailto:${siteContent.contact.email}`}
+          className="font-medium text-lumtek-blue hover:underline break-anywhere"
+        >
+          {siteContent.contact.email}
+        </a>
+        . Al enviar el formulario recibirás una confirmación por correo.
+      </p>
+
       <div className={compact ? 'space-y-4' : 'grid gap-4 sm:grid-cols-2 md:gap-5'}>
         <Field label="Nombre *" error={errors.name}>
           <input

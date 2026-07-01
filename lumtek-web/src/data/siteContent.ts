@@ -6,6 +6,7 @@ export const siteContent = {
   claim: 'Domótica, sistemas inteligentes y seguridad tecnológica.',
   contact: {
     phone: 'Pendiente de completar',
+    email: 'juanf.delgado@lumtek.es',
     location: 'España',
     social: {
       linkedin: 'https://linkedin.com/company/lumtek',
