@@ -2,10 +2,10 @@
 
 Guía de referencia para **modificar manualmente** cualquier parte del sitio: código fuente, datos, assets, API, correos y servidor de producción.
 
-**Producción:** https://lumtek.31.70.109.174.nip.io  
+**Producción:** https://lumtek.es  
 **SSH:** `ssh root@31.70.109.174`
 
-Documentación relacionada: [`VPS.md`](VPS.md) (montaje servidor) · [`../lumtek-web/README.md`](../lumtek-web/README.md) (app web) · [`../README.md`](../README.md) (índice repo)
+Documentación relacionada: [`DOMINIO-LUMTEK-ES.md`](DOMINIO-LUMTEK-ES.md) (lanzar lumtek.es) · [`DEPLOY.md`](DEPLOY.md) (subir cambios al servidor) · [`SEO.md`](SEO.md) (metadatos y sitemap) · [`VPS.md`](VPS.md) (montaje servidor) · [`../lumtek-web/README.md`](../lumtek-web/README.md) (app web) · [`../README.md`](../README.md) (índice repo)
 
 ---
 
@@ -15,7 +15,7 @@ Documentación relacionada: [`VPS.md`](VPS.md) (montaje servidor) · [`../lumtek
 Usuario
    │
    ▼
-DNS nip.io  (lumtek.31.70.109.174.nip.io → 31.70.109.174)
+DNS Cloudflare  (lumtek.es / www → 31.70.109.174)
    │
    ▼
 Nginx :443 (SSL Let's Encrypt)
@@ -44,7 +44,7 @@ Nginx :443 (SSL Let's Encrypt)
 | **Plantillas de correo** (tras deploy desde repo) | `/var/www/lumtek-app/server/contactEmail.mjs` |
 | **Lógica API** | `/var/www/lumtek-app/server/index.mjs` |
 | **Nginx** (SSL, SPA, proxy `/api`) | `/etc/nginx/sites-available/lumtek` |
-| **Certificados SSL** | `/etc/letsencrypt/live/lumtek.31.70.109.174.nip.io/` |
+| **Certificados SSL** | `/etc/letsencrypt/live/lumtek.es/` |
 | **Servicio systemd API** | `/etc/systemd/system/lumtek-api.service` |
 
 ### Comandos habituales en el servidor
@@ -57,7 +57,7 @@ journalctl -u lumtek-api -f
 # Tras cambiar SMTP
 nano /var/www/lumtek-app/.env
 systemctl restart lumtek-api
-curl -s https://lumtek.31.70.109.174.nip.io/api/health
+curl -s https://lumtek.es/api/health
 
 # Tras cambiar Nginx
 nginx -t && systemctl reload nginx
@@ -104,7 +104,6 @@ Estos componentes envuelven **cada ruta** de la app.
 | **Ruta imagen logo** | `lumtek-web/src/components/layout/HeaderLogo.tsx` | `LUMTEK_BRAND_LOGO_SRC` → `/images/brand/lumtek-logo.webp` |
 | **Wordmark animado LUMTEK** | `lumtek-web/src/components/ui/LumtekLogo.tsx` | Tipografía, rayos, variantes |
 | **Footer** (pie de página) | `lumtek-web/src/components/layout/Footer.tsx` | Columnas enlaces, contacto, copyright |
-| **Guía PWA en footer** | `lumtek-web/src/components/layout/PwaInstallGuide.tsx` | Instrucciones instalar app |
 | **Items menú navegación** | `lumtek-web/src/data/siteContent.ts` → `navItems` | Enlaces del header |
 | **Enlaces footer** | `lumtek-web/src/components/layout/Footer.tsx` → `footerNav`, `legalLinks` | Nav y legal del pie |
 | **Barra progreso scroll** | `lumtek-web/src/components/ui/ScrollProgress.tsx` | Barra superior al hacer scroll |
@@ -219,8 +218,6 @@ Probar plantillas sin desplegar: `node server/contactEmail.mjs`
 | Manifest (nombre, iconos, tema) | `public/manifest.webmanifest` | `/var/www/lumtek/manifest.webmanifest` |
 | Service worker (caché) | `public/sw.js` | `/var/www/lumtek/sw.js` |
 | Registro SW | `src/registerPwa.ts` | (dentro del bundle JS) |
-| Hook instalación | `src/hooks/usePwaInstall.ts` | — |
-| Guía en footer | `src/components/layout/PwaInstallGuide.tsx` | — |
 | Iconos PWA | `public/images/brand/icon-192.png`, `icon-512.png` | `/var/www/lumtek/images/brand/` |
 | Meta PWA en HTML | `index.html` | `/var/www/lumtek/index.html` (tras build) |
 
@@ -320,5 +317,4 @@ LUMTEK_SMTP_PASS='contraseña' bash deploy/deploy-api.sh
 | Formulario contacto | `ContactForm.tsx` |
 | Textos correo automático | `server/contactEmail.mjs` |
 | Cookies / RGPD | `legalContent.ts`, `CookieBanner.tsx` |
-| Instalar PWA (texto footer) | `PwaInstallGuide.tsx` |
 | Colores / fuentes | `tailwind.config.js`, `index.css` |

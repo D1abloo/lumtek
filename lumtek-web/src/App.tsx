@@ -23,6 +23,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import CookiesPolicyPage from './pages/CookiesPolicyPage'
 import CookieSettingsPage from './pages/CookieSettingsPage'
 import UseCasePage from './pages/UseCasePage'
+import { RouteSeo } from './components/seo/RouteSeo'
 
 const ScrollOnNavigate = () => {
   const { pathname, hash } = useLocation()
@@ -77,6 +78,7 @@ const App = () => {
     <AmbientBackground>
       <ScrollProgress />
       <ScrollOnNavigate />
+      <RouteSeo />
       <Header />
       <main>
         <Routes>

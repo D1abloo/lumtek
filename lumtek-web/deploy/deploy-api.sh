@@ -7,7 +7,7 @@ WEB_ROOT="$(cd "${DEPLOY_DIR}/.." && pwd)"
 
 HOST="${LUMTEK_DEPLOY_HOST:-root@31.70.109.174}"
 APP_DIR="${LUMTEK_APP_DIR:-/var/www/lumtek-app}"
-DOMAIN="${LUMTEK_DOMAIN:-lumtek.31.70.109.174.nip.io}"
+DOMAIN="${LUMTEK_DOMAIN:-lumtek.es}"
 NGINX_SITE="/etc/nginx/sites-available/lumtek"
 
 echo "==> API Lumtek en ${HOST}:${APP_DIR}"

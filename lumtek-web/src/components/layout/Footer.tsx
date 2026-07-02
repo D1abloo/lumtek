@@ -2,15 +2,16 @@ import { Link, useLocation } from 'react-router-dom'
 import { Mail, MapPin, MessageSquare, Phone } from 'lucide-react'
 import { siteContent } from '../../data/siteContent'
 import { scrollToTop } from '../../utils/scroll'
-import { HeaderBrand } from './HeaderBrand'
-import { PwaInstallGuide } from './PwaInstallGuide'
+import { LUMTEK_BRAND_LOGO_SRC } from './HeaderLogo'
 
 const footerNav = [
   { label: 'Inicio', to: '/' },
-  { label: 'Domótica', to: '/#domotica' },
   { label: 'Cámaras', to: '/#camaras' },
-  { label: 'Seguridad', to: '/#seguridad' },
+  { label: 'Domótica', to: '/#domotica' },
+  { label: 'Acceso a seguridad', to: '/#seguridad' },
+  { label: 'Integración', to: '/#core' },
   { label: 'Servicios', to: '/#servicios' },
+  { label: 'Aplicaciones', to: '/#aplicaciones' },
   { label: 'Contacto', to: '/contacto' },
 ]
 
@@ -21,6 +22,11 @@ const legalLinks = [
   { label: 'Configuración de cookies', to: '/configuracion-cookies' },
 ]
 
+const footerHeading =
+  'font-display text-[11px] font-semibold uppercase tracking-wider text-lumtek-text'
+const footerLink =
+  'text-xs text-lumtek-text-secondary transition-colors hover:text-lumtek-blue sm:text-[13px]'
+
 export const Footer = () => {
   const { pathname } = useLocation()
 
@@ -29,34 +35,18 @@ export const Footer = () => {
   }
 
   return (
-    <footer className="border-t border-lumtek-border bg-lumtek-surface py-10 pb-safe sm:py-14 md:py-16">
+    <footer className="border-t border-lumtek-border bg-lumtek-surface pt-6 pb-3 pb-safe sm:pt-8 sm:pb-4">
       <div className="mx-auto max-w-7xl section-x">
-        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <Link
-              to="/"
-              onClick={handleHomeClick}
-              className="inline-flex transition-opacity hover:opacity-90"
-              aria-label="Lumtek, ir al inicio"
-            >
-              <HeaderBrand size="footer" staticWordmark />
-            </Link>
-            <p className="mt-4 text-sm leading-relaxed text-lumtek-text-secondary">
-              {siteContent.claim}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-lumtek-text">
-              Lumtek
-            </h3>
-            <ul className="mt-4 space-y-2">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 xl:gap-x-16">
+          <div className="min-w-0">
+            <h3 className={footerHeading}>Navegación</h3>
+            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-1 sm:gap-y-2">
               {footerNav.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.to}
                     onClick={link.to === '/' ? handleHomeClick : undefined}
-                    className="text-sm text-lumtek-text-secondary transition-colors hover:text-lumtek-blue"
+                    className={footerLink}
                   >
                     {link.label}
                   </Link>
@@ -65,17 +55,12 @@ export const Footer = () => {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-lumtek-text">
-              Legal
-            </h3>
-            <ul className="mt-4 space-y-2">
+          <div className="min-w-0">
+            <h3 className={footerHeading}>Legal</h3>
+            <ul className="mt-3 space-y-2">
               {legalLinks.map((link) => (
                 <li key={link.label}>
-                  <Link
-                    to={link.to}
-                    className="text-sm text-lumtek-text-secondary transition-colors hover:text-lumtek-blue"
-                  >
+                  <Link to={link.to} className={footerLink}>
                     {link.label}
                   </Link>
                 </li>
@@ -83,47 +68,56 @@ export const Footer = () => {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-lumtek-text">
-              Contacto
-            </h3>
-            <ul className="mt-4 space-y-3">
+          <div className="min-w-0 sm:col-span-2 lg:col-span-1">
+            <h3 className={footerHeading}>Contacto</h3>
+            <ul className="mt-3 space-y-2 sm:max-w-sm lg:max-w-none">
               <li>
-                <Link
-                  to="/contacto"
-                  className="flex items-center gap-2 text-sm text-lumtek-text-secondary transition-colors hover:text-lumtek-blue"
-                >
-                  <MessageSquare className="h-4 w-4 shrink-0" />
-                  Formulario de contacto
+                <Link to="/contacto" className={`flex items-center gap-1.5 ${footerLink}`}>
+                  <MessageSquare className="h-3.5 w-3.5 shrink-0" />
+                  Formulario
                 </Link>
               </li>
               <li>
                 <a
                   href={`mailto:${siteContent.contact.email}`}
-                  className="flex items-center gap-2 text-sm text-lumtek-text-secondary transition-colors hover:text-lumtek-blue break-anywhere"
+                  className={`flex items-center gap-1.5 break-anywhere ${footerLink}`}
                 >
-                  <Mail className="h-4 w-4 shrink-0" />
+                  <Mail className="h-3.5 w-3.5 shrink-0" />
                   {siteContent.contact.email}
                 </a>
               </li>
-              <li className="flex items-center gap-2 text-sm text-lumtek-text-secondary">
-                <Phone className="h-4 w-4 shrink-0" />
+              <li className={`flex items-center gap-1.5 ${footerLink}`}>
+                <Phone className="h-3.5 w-3.5 shrink-0" />
                 {siteContent.contact.phone}
               </li>
-              <li className="flex items-center gap-2 text-sm text-lumtek-text-secondary">
-                <MapPin className="h-4 w-4 shrink-0" />
+              <li className={`flex items-center gap-1.5 ${footerLink}`}>
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
                 {siteContent.contact.location}
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 sm:mt-10 md:mt-12">
-          <PwaInstallGuide />
-        </div>
-
-        <div className="mt-8 border-t border-lumtek-border pt-6 text-center text-xs text-lumtek-text-secondary sm:mt-10 sm:pt-8">
-          © {new Date().getFullYear()} Lumtek. Todos los derechos reservados.
+        <div className="relative mt-4 flex items-center border-t border-lumtek-border py-1.5 sm:mt-5">
+          <Link
+            to="/"
+            onClick={handleHomeClick}
+            className="relative z-10 inline-flex shrink-0 leading-none transition-opacity hover:opacity-90"
+            aria-label="Lumtek, ir al inicio"
+          >
+            <span className="inline-flex h-12 items-center overflow-hidden sm:h-14">
+              <img
+                src={LUMTEK_BRAND_LOGO_SRC}
+                alt=""
+                className="h-[118%] w-auto max-w-none"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          </Link>
+          <p className="pointer-events-none absolute inset-x-0 z-0 px-4 text-center text-[11px] text-lumtek-text-secondary sm:text-xs">
+            © {new Date().getFullYear()} Lumtek. Todos los derechos reservados.
+          </p>
         </div>
       </div>
     </footer>

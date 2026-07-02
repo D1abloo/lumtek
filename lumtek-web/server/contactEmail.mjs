@@ -5,6 +5,12 @@ const esc = (value) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
 
+const SITE_URL = (
+  process.env.SITE_URL ||
+  process.env.PUBLIC_SITE_URL ||
+  'https://lumtek.es'
+).replace(/\/$/, '')
+
 const line = (label, value) => (value ? `${label}: ${value}` : null)
 
 /** Correo interno a Lumtek con los datos del formulario */
@@ -94,7 +100,7 @@ export const buildClientEmail = (data) => {
     'Un saludo,',
     'Equipo Lumtek',
     'Domótica y sistemas inteligentes',
-    'https://lumtek.31.70.109.174.nip.io',
+    SITE_URL,
     '',
     '— Este es un correo automático. Por favor, no respondas a este mensaje.',
     '  Si necesitas ampliar información, escríbenos a juanf.delgado@lumtek.es',
@@ -139,7 +145,7 @@ export const buildClientEmail = (data) => {
         </td></tr>
         <tr><td style="padding:16px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;font-size:12px;color:#94a3b8;line-height:1.6;">
           Lumtek · Domótica y sistemas inteligentes<br>
-          <a href="https://lumtek.31.70.109.174.nip.io" style="color:#00a8ff;">lumtek.31.70.109.174.nip.io</a><br>
+          <a href="${SITE_URL}" style="color:#00a8ff;">lumtek.es</a><br>
           Correo automático de confirmación. No respondas a este mensaje.
         </td></tr>
       </table>

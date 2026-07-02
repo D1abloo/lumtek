@@ -15,25 +15,17 @@ const LOGO_MARK_SRC = LUMTEK_MARK_SRC
 const ASPECT = 1024 / 658
 const FRAME_PATH = 'M 512 26 L 992 329 L 512 632 L 32 329 Z'
 
-/** Wordmark: tinta fría + acento marca Lumtek en U y E */
+/** Wordmark: una sola tinta (misma que la L) en todas las letras */
 const WORDMARK = {
   ink: '#1E293B',
-  accent: '#00A8FF',
-  accentDeep: '#0090DD',
   strike: '#D4F3FF',
 } as const
 
-const letterIsAccent = (index: number) => index === 1 || index === 4
+const letterIsAccent = (_index: number) => false
 
-const letterShadow = (index: number, struck = false) => {
-  if (letterIsAccent(index)) {
-    if (struck) {
-      return '0 0 14px rgba(0,168,255,0.5), 0 2px 10px rgba(0,168,255,0.22), 0 1px 0 rgba(0,144,221,0.4)'
-    }
-    return '0 1px 0 rgba(0,144,221,0.45), 0 2px 8px rgba(0,168,255,0.12)'
-  }
+const letterShadow = (struck = false) => {
   if (struck) {
-    return '0 0 14px rgba(0,168,255,0.42), 0 1px 0 #94a3b8, 0 2px 0 #64748b'
+    return '0 0 10px rgba(30,41,59,0.2), 0 1px 0 #94a3b8, 0 2px 0 #64748b'
   }
   return '0 1px 0 #cbd5e1'
 }
@@ -224,8 +216,8 @@ const ColoredWordmark = ({
       {letters.map((letter, index) => {
         const delay = (index + 1) * LETTER_STAGGER_S
         const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
-        const restShadow = letterShadow(index)
-        const struckShadow = letterShadow(index, true)
+        const restShadow = letterShadow()
+        const struckShadow = letterShadow(true)
         const isAccent = letterIsAccent(index)
 
         return (

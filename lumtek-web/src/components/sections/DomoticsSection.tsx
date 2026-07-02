@@ -9,7 +9,7 @@ export const DomoticsSection = () => {
     <section id="domotica" className="section-y relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl section-x">
         <SectionTitle
-          eyebrow="Domótica & Sistemas"
+          eyebrow="Domótica"
           title="Tecnología que automatiza, protege y conecta"
           description="La domótica y los sistemas inteligentes permiten controlar cámaras, accesos, iluminación, climatización, sensores y automatizaciones desde un único entorno. Una instalación bien diseñada mejora la seguridad, optimiza consumos, facilita la supervisión y aporta comodidad real tanto en viviendas como en negocios."
         />

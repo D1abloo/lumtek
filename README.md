@@ -2,7 +2,7 @@
 
 Repositorio del sitio web corporativo de **Lumtek** (domótica, sistemas inteligentes y seguridad).
 
-**Producción:** https://lumtek.31.70.109.174.nip.io  
+**Producción:** https://lumtek.es  
 **Servidor:** `ssh root@31.70.109.174`
 
 ---
@@ -17,7 +17,7 @@ Repositorio del sitio web corporativo de **Lumtek** (domótica, sistemas intelig
 | **Plantillas de correo** | `/var/www/lumtek-app/server/contactEmail.mjs` |
 | **Servidor Express** | `/var/www/lumtek-app/server/index.mjs` |
 | **Nginx** (SSL + proxy `/api`) | `/etc/nginx/sites-available/lumtek` |
-| **Certificados SSL** | `/etc/letsencrypt/live/lumtek.31.70.109.174.nip.io/` |
+| **Certificados SSL** | `/etc/letsencrypt/live/lumtek.es/` |
 | **Servicio API** (systemd) | `/etc/systemd/system/lumtek-api.service` |
 
 ### Comandos útiles en el servidor
@@ -30,7 +30,7 @@ journalctl -u lumtek-api -f
 # Tras editar .env (contraseña SMTP)
 nano /var/www/lumtek-app/.env
 systemctl restart lumtek-api
-curl https://lumtek.31.70.109.174.nip.io/api/health
+curl https://lumtek.es/api/health
 
 # Tras editar Nginx
 nginx -t && systemctl reload nginx
@@ -52,6 +52,7 @@ nginx -t && systemctl reload nginx
 | `.env` local (desarrollo) | `lumtek-web/.env` (copiar de `.env.example`) |
 | `.env` producción (plantilla) | `lumtek-web/deploy/env.production.template` |
 | Guía VPS detallada | [`docs/VPS.md`](docs/VPS.md) |
+| **Lanzar lumtek.es** (DNS, SSL, deploy) | [`docs/DOMINIO-LUMTEK-ES.md`](docs/DOMINIO-LUMTEK-ES.md) |
 | **Mapa infraestructura** (header, hero, footer, todo) | [`docs/INFRAESTRUCTURA.md`](docs/INFRAESTRUCTURA.md) |
 | Nginx plantilla | `lumtek-web/deploy/nginx-site.conf.template` |
 
@@ -141,7 +142,7 @@ bash deploy/deploy-api.sh
 
 **Versión entregada:** sitio responsive (móvil, tablet, escritorio), PWA instalable con guía en el footer, formulario de contacto con correos automáticos (staff + cliente), desplegado en VPS.
 
-**Producción:** https://lumtek.31.70.109.174.nip.io
+**Producción:** https://lumtek.es
 
 ---
 

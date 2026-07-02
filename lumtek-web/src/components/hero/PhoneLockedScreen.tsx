@@ -1,20 +1,15 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Lock } from 'lucide-react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import {
   FallingLightning,
   LETTER_STAGGER_S,
   STRIKE_IMPACT_OFFSET_S,
 } from '../ui/FallingLightning'
-import { LUMTEK_MARK_SRC } from './AppBrandMark'
+import { PhoneBrandLogo } from './PhoneBrandLogo'
 
 const UNLOCK_FADE_S = 2.5
 const ease = [0.22, 1, 0.36, 1] as const
-const spring = { type: 'spring' as const, stiffness: 260, damping: 28 }
-const LOGO_ASPECT = 1024 / 658
-const LOGO_H = 36
-const LOGO_W = Math.round(LOGO_H * LOGO_ASPECT)
 const LOCKED_TEXT = 'Bloqueado'
 
 type PhoneLockedScreenProps = {
@@ -83,41 +78,41 @@ const AnimatedLetter = ({ letter, index, instant }: AnimatedLetterProps) => {
   )
 }
 
-type AnimatedLockLogoProps = {
+type AnimatedBrandLogoProps = {
   instant: boolean
 }
 
-const AnimatedLockLogo = ({ instant }: AnimatedLockLogoProps) => {
+const AnimatedBrandLogo = ({ instant }: AnimatedBrandLogoProps) => {
   const delay = 0
   const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
 
   return (
-    <motion.span
-      className="relative inline-block shrink-0 overflow-visible"
-      style={{ width: LOGO_W, height: LOGO_H }}
-    >
+    <motion.span className="relative inline-flex shrink-0 items-center justify-center overflow-visible leading-none">
+      <span
+        className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.28),rgba(34,211,238,0.12)_45%,transparent_72%)] blur-md"
+        aria-hidden
+      />
       <FallingLightning delay={delay} reduced={instant} />
       <motion.span
-        className="relative z-10 block h-full w-full"
+        className="relative z-10"
         initial={
           instant
-            ? { opacity: 1, scale: 1, filter: 'brightness(0) invert(1)' }
+            ? { opacity: 1, scale: 1, filter: 'brightness(1.38) contrast(1.16) saturate(1.12)' }
             : {
                 opacity: 0,
-                scale: 0.82,
-                filter:
-                  'brightness(0) invert(1) brightness(1.7) drop-shadow(0 0 14px rgba(0,168,255,0.65))',
+                scale: 0.84,
+                filter: 'brightness(1.45) contrast(1.18) saturate(1.15) drop-shadow(0 0 30px rgba(0,168,255,0.9))',
               }
         }
         animate={{
           opacity: 1,
           scale: 1,
           filter: instant
-            ? 'brightness(0) invert(1)'
+            ? 'brightness(1.38) contrast(1.16) saturate(1.12)'
             : [
-                'brightness(0) invert(1) brightness(1.5) drop-shadow(0 0 18px rgba(0,210,255,0.85))',
-                'brightness(0) invert(1) brightness(1.08) drop-shadow(0 0 10px rgba(0,168,255,0.45))',
-                'brightness(0) invert(1)',
+                'brightness(1.5) contrast(1.2) saturate(1.15) drop-shadow(0 0 34px rgba(0,210,255,0.95))',
+                'brightness(1.42) contrast(1.17) saturate(1.13) drop-shadow(0 0 24px rgba(0,168,255,0.75))',
+                'brightness(1.38) contrast(1.16) saturate(1.12) drop-shadow(0 0 18px rgba(0,168,255,0.55))',
               ],
         }}
         transition={
@@ -125,19 +120,12 @@ const AnimatedLockLogo = ({ instant }: AnimatedLockLogoProps) => {
             ? { duration: 0 }
             : {
                 opacity: { duration: 0.12, delay: revealDelay },
-                scale: { duration: 0.32, delay: revealDelay, ease },
-                filter: { duration: 0.55, delay: revealDelay, ease, times: [0, 0.35, 1] },
+                scale: { duration: 0.34, delay: revealDelay, ease },
+                filter: { duration: 0.6, delay: revealDelay, ease, times: [0, 0.35, 1] },
               }
         }
       >
-        <img
-          src={LUMTEK_MARK_SRC}
-          alt=""
-          width={LOGO_W}
-          height={LOGO_H}
-          className="h-full w-full object-contain"
-          aria-hidden
-        />
+        <PhoneBrandLogo size="xl" bright />
       </motion.span>
     </motion.span>
   )
@@ -182,26 +170,10 @@ const LockReveal = ({ revealKey, unlocking }: LockRevealProps) => {
         />
       )}
 
-      <motion.span
-        className="relative flex h-[5.75rem] w-[5.75rem] flex-col items-center justify-center rounded-full border-2 border-lumtek-cyan/60 bg-[#0a0f18] shadow-[0_0_48px_rgba(0,168,255,0.42)]"
-        initial={instant ? false : { scale: 1.12, opacity: 0.6 }}
-        animate={{ scale: 1, opacity: 1, boxShadow: '0 0 48px rgba(0,168,255,0.42)' }}
-        transition={instant ? { duration: 0 } : spring}
-      >
-        <AnimatedLockLogo instant={instant} />
-        <span className="mt-1.5 text-[10px] font-bold tracking-[0.22em] text-white">LUMTEK</span>
-        <motion.span
-          className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-lumtek-cyan/60 bg-black shadow-[0_0_14px_rgba(0,168,255,0.55)]"
-          initial={instant ? false : { scale: 0.8, rotate: 8 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ duration: 0.75, delay: instant ? 0 : 0.35, ease }}
-        >
-          <Lock className="h-3 w-3 text-lumtek-cyan" strokeWidth={2.25} aria-hidden />
-        </motion.span>
-      </motion.span>
+      <AnimatedBrandLogo instant={instant} />
 
       <span
-        className="mt-4 inline-flex overflow-visible text-sm font-semibold leading-none tracking-wide"
+        className="mt-5 inline-flex overflow-visible text-sm font-semibold leading-none tracking-wide"
         aria-hidden
       >
         {letters.map((letter, index) => (
@@ -238,7 +210,7 @@ export const PhoneLockedScreen = ({
 
   return (
     <motion.div
-      className="absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden bg-black px-4"
+      className="absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden bg-black px-3"
       initial={reduced || !locking ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={
@@ -254,7 +226,7 @@ export const PhoneLockedScreen = ({
       onPointerEnter={() => onHoverUnlock?.()}
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(0,168,255,0.08),transparent_58%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(0,168,255,0.22),transparent_58%)]"
         aria-hidden
       />
 

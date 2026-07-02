@@ -16,6 +16,8 @@ import {
   Wrench,
 } from 'lucide-react'
 import { getUseCaseBySlug, useCases } from '../data/useCases'
+import { SITE_URL, defaultPageSeo } from '../config/siteSeo'
+import { applyPageSeo } from '../hooks/usePageSeo'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { getIcon } from '../utils/icons'
 import { AnimatedReveal } from '../components/ui/AnimatedReveal'
@@ -41,17 +43,34 @@ const UseCasePage = () => {
 
   useEffect(() => {
     if (!useCase) return
-    document.title = useCase.metaTitle
-    const meta = document.querySelector('meta[name="description"]')
-    if (meta) meta.setAttribute('content', useCase.metaDescription)
+
+    const path = `/aplicaciones/${useCase.id}`
+    const image = `${SITE_URL}${useCase.image}`
+
+    applyPageSeo({
+      title: useCase.metaTitle,
+      description: useCase.metaDescription,
+      path,
+      image,
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: useCase.title,
+        description: useCase.metaDescription,
+        url: `${SITE_URL}${path}`,
+        provider: {
+          '@type': 'Organization',
+          name: 'Lumtek',
+          url: SITE_URL,
+        },
+        areaServed: 'España',
+        serviceType: useCase.title,
+        image,
+      },
+    })
+
     return () => {
-      document.title = 'Lumtek | Domótica y sistemas inteligentes'
-      if (meta) {
-        meta.setAttribute(
-          'content',
-          'Lumtek ofrece soluciones de domótica, videovigilancia, control de accesos, sensores, automatización y seguridad tecnológica para viviendas, empresas y edificios.',
-        )
-      }
+      applyPageSeo({ ...defaultPageSeo, path: '/', includeSiteGraph: true })
     }
   }, [useCase])
 
@@ -60,25 +79,8 @@ const UseCasePage = () => {
   const Icon = getIcon(useCase.icon ?? 'Home')
   const others = useCases.filter((item) => item.id !== useCase.id).slice(0, 3)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: useCase.title,
-    description: useCase.metaDescription,
-    provider: {
-      '@type': 'Organization',
-      name: 'Lumtek',
-      url: 'https://lumtek.es',
-    },
-    areaServed: 'España',
-    serviceType: useCase.title,
-    image: `https://lumtek.es${useCase.image}`,
-  }
-
   return (
     <div className="min-h-screen bg-white page-top pb-16 sm:pb-20">
-      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-
       {/* Fondo sutil */}
       <div
         className="pointer-events-none fixed inset-0 -z-10 opacity-40"

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
-import { AppBrandMark } from './AppBrandMark'
 import { siteContent } from '../../data/siteContent'
+import { PhoneBrandLogo } from './PhoneBrandLogo'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -55,7 +55,10 @@ export const LumtekIntroScreen = ({ onComplete }: LumtekIntroScreenProps) => {
         animate={{ opacity: exiting ? 0 : 1, scale: exiting ? 0.96 : 1, y: exiting ? -10 : 0 }}
         transition={{ duration: 0.5, ease }}
       >
-        <AppBrandMark size="lg" centered compact showTagline />
+        <PhoneBrandLogo size="lg" glow className="mx-auto" />
+        <p className="mt-2 text-[9px] font-medium uppercase tracking-[0.12em] text-lumtek-cyan/85">
+          {siteContent.tagline}
+        </p>
         <p className="mt-3 text-[10px] leading-snug text-slate-400">
           {siteContent.claim}
         </p>

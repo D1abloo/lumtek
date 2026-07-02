@@ -7,6 +7,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { LightningLoadOverlay } from '../ui/LightningLoadOverlay'
 import { LumtekControlApp } from './LumtekControlApp'
 import { PhoneLockedScreen } from './PhoneLockedScreen'
+import { PhoneScreenHeader } from './PhoneScreenHeader'
 
 export const HERO_SCREEN = DOMOTICA_IMAGE
 
@@ -25,7 +26,8 @@ type AppViewFallbackProps = {
 }
 
 const AppViewFallback = ({ title, items = [] }: AppViewFallbackProps) => (
-  <div className="flex h-full w-full flex-col bg-[#090d13] px-3 pb-3 pt-3 text-white">
+  <div className="relative flex h-full w-full flex-col bg-[#090d13] px-3 pb-3 pt-12 text-white">
+    <PhoneScreenHeader variant="dark" />
     <header>
       <p className="text-[9px] font-bold">Lumtek Control</p>
       <p className="mt-0.5 flex items-center gap-1 text-[6px] text-slate-400">
@@ -270,6 +272,7 @@ export const LiveCameraPreview = ({
           />
         </motion.div>
       </AnimatePresence>
+      <PhoneScreenHeader variant="dark" />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import type { NavItem } from '../types'
 
 export const siteContent = {
   brand: 'LUMTEK',
-  tagline: 'Domótica & Sistemas',
+  tagline: 'Domótica',
   claim: 'Domótica, sistemas inteligentes y seguridad tecnológica.',
   contact: {
     phone: 'Pendiente de completar',
@@ -30,6 +30,9 @@ export const siteContent = {
 export const navItems: NavItem[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Cámaras', href: '/#camaras' },
+  { label: 'Domótica', href: '/#domotica' },
   { label: 'Seguridad', href: '/#seguridad' },
+  { label: 'Integración', href: '/#core' },
   { label: 'Servicios', href: '/#servicios' },
+  { label: 'Aplicaciones', href: '/#aplicaciones' },
 ]

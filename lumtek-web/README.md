@@ -4,7 +4,8 @@ Landing de **Lumtek** — domótica, sistemas inteligentes, videovigilancia e Io
 
 Stack: React 19 · TypeScript · Vite · Tailwind · Framer Motion · React Router.
 
-**Montaje completo en VPS (dominio nip.io + Nginx + SSL):** [`../docs/VPS.md`](../docs/VPS.md)  
+**Migración a lumtek.es:** [`../docs/DOMINIO-LUMTEK-ES.md`](../docs/DOMINIO-LUMTEK-ES.md)  
+**Montaje VPS (Nginx + SSL):** [`../docs/VPS.md`](../docs/VPS.md)  
 **Mapa infraestructura (header, hero, footer, API…):** [`../docs/INFRAESTRUCTURA.md`](../docs/INFRAESTRUCTURA.md)  
 **Deploy rápido:** `bash deploy/deploy.sh` (tras `npm install` y build)
 
@@ -14,7 +15,7 @@ Stack: React 19 · TypeScript · Vite · Tailwind · Framer Motion · React Rout
 
 | Concepto | Valor |
 |----------|--------|
-| URL | https://lumtek.31.70.109.174.nip.io |
+| URL | https://lumtek.es |
 | Servidor | `root@31.70.109.174` (Ubuntu) |
 | Web estática | `/var/www/lumtek` |
 | API contacto (Node) | `/var/www/lumtek-app` |
@@ -23,7 +24,7 @@ Stack: React 19 · TypeScript · Vite · Tailwind · Framer Motion · React Rout
 | Nginx site | `/etc/nginx/sites-available/lumtek` → `sites-enabled/lumtek` |
 | Servicio API | `systemctl status lumtek-api` |
 | SSL | Let's Encrypt (Certbot), renueva solo |
-| Dominio | [nip.io](https://nip.io) gratuito (`lumtek.31.70.109.174.nip.io` → IP del VPS) |
+| Dominio | `lumtek.es` + `www.lumtek.es` (DNS Cloudflare → `31.70.109.174`) |
 
 Nginx sirve el build de Vite como SPA (`try_files` → `index.html`) y hace **proxy de `/api/`** al proceso Node en el puerto `3001`.
 
@@ -64,8 +65,8 @@ bash deploy/deploy-api.sh    # solo API / correos
 Comprobar:
 
 ```bash
-curl -sI https://lumtek.31.70.109.174.nip.io/ | head -3
-curl -s https://lumtek.31.70.109.174.nip.io/api/health
+curl -sI https://lumtek.es/ | head -3
+curl -s https://lumtek.es/api/health
 ```
 
 ### Si tocas nginx o SSL (raro)
@@ -150,8 +151,6 @@ certbot renew --dry-run   # comprobar renovación SSL
 | Montaña del móvil | `public/images/hero/montana.webp` (regenerar: `python3 scripts/build-montaña-webp.py`) |
 | Captura domótica del móvil | `public/images/hero/domotica.webp` |
 | Favicon, PWA | `public/favicon.svg`, `public/manifest.webmanifest`, `public/sw.js` |
-| Guía instalar PWA (footer) | `src/components/layout/PwaInstallGuide.tsx` |
-| Hook instalación PWA | `src/hooks/usePwaInstall.ts` |
 | Estilos globales, utilidades Tailwind | `src/index.css`, `tailwind.config.js` |
 
 ### UI reutilizable
@@ -211,7 +210,6 @@ La web es una **Progressive Web App**: se puede añadir a la pantalla de inicio 
 | `public/manifest.webmanifest` | Nombre, iconos, tema, atajos |
 | `public/sw.js` | Caché offline básica |
 | `src/registerPwa.ts` | Registro del service worker |
-| `src/components/layout/PwaInstallGuide.tsx` | Instrucciones en el pie de página (con logo) |
 
 **Probar en Chrome:** F12 → icono de dispositivo → elegir iPhone, iPad o dimensiones responsive. En escritorio, busca el icono de instalación en la barra de direcciones.
 
@@ -234,4 +232,4 @@ npm run build      # genera dist/ para producción
 2. `npm run dev` → ver en http://localhost:5173
 3. `npm run build` → comprobar que compila.
 4. Subir `dist/` a `/var/www/lumtek` en la VPS.
-5. Abrir https://lumtek.31.70.109.174.nip.io con recarga forzada.
+5. Abrir https://lumtek.es con recarga forzada.

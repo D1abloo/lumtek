@@ -1,28 +1,17 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { siteContent } from '../../data/siteContent'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
-import {
-  FallingLightning,
-  LETTER_STAGGER_S,
-  STRIKE_IMPACT_OFFSET_S,
-} from './FallingLightning'
-import { LUMTEK_MARK_SRC } from '../hero/AppBrandMark'
+import { PhoneBrandLogo } from '../hero/PhoneBrandLogo'
+import { FallingLightning } from './FallingLightning'
 
 const ease = [0.22, 1, 0.36, 1] as const
 const STRIKE_INTERVAL_MS = 520
-const LOGO_ASPECT = 1024 / 658
-const LOGO_H = 30
-const LOGO_W = Math.round(LOGO_H * LOGO_ASPECT)
-
-const letterIsAccent = (index: number) => index === 1 || index === 4
 
 type LumtekLoadingBrandProps = {
   reduced: boolean
 }
 
 const LumtekLoadingBrand = ({ reduced }: LumtekLoadingBrandProps) => {
-  const letters = siteContent.brand.split('')
   const [logoStrike, setLogoStrike] = useState(0)
 
   useEffect(() => {
@@ -32,68 +21,24 @@ const LumtekLoadingBrand = ({ reduced }: LumtekLoadingBrandProps) => {
   }, [reduced])
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="relative flex flex-col items-center">
       <span
-        className="relative mb-3 inline-block overflow-visible"
-        style={{ width: LOGO_W, height: LOGO_H }}
+        className="pointer-events-none absolute -inset-20 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.45),rgba(34,211,238,0.2)_38%,transparent_68%)] blur-xl"
+        aria-hidden
+      />
+      {!reduced && (
+        <span key={logoStrike} className="absolute -top-4 left-1/2 z-20 -translate-x-1/2">
+          <FallingLightning delay={0} reduced={false} />
+        </span>
+      )}
+      <motion.div
+        className="relative z-10"
+        initial={reduced ? false : { opacity: 0, scale: 0.86 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35, ease }}
       >
-        {!reduced && (
-          <span key={logoStrike} className="absolute inset-x-0 -top-1 flex justify-center">
-            <FallingLightning delay={0} reduced={false} />
-          </span>
-        )}
-        <motion.img
-          src={LUMTEK_MARK_SRC}
-          alt=""
-          width={LOGO_W}
-          height={LOGO_H}
-          className="relative z-10 h-full w-full object-contain brightness-0 invert"
-          initial={reduced ? false : { opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.35, ease }}
-          aria-hidden
-        />
-      </span>
-
-      <span className="inline-flex overflow-visible text-sm font-bold leading-none tracking-[0.18em] text-white">
-        {letters.map((letter, index) => {
-          const delay = (index + 1) * LETTER_STAGGER_S
-          const revealDelay = reduced ? 0 : delay + STRIKE_IMPACT_OFFSET_S
-          const isAccent = letterIsAccent(index)
-
-          return (
-            <motion.span
-              key={`${letter}-${index}`}
-              className="relative inline-block overflow-visible px-[1px]"
-            >
-              {!reduced && <FallingLightning delay={delay} reduced={false} />}
-              <motion.span
-                className={`relative z-10 inline-block ${
-                  isAccent
-                    ? 'bg-gradient-to-b from-[#5CD4FF] via-[#00A8FF] to-[#0090DD] bg-clip-text text-transparent'
-                    : ''
-                }`}
-                initial={
-                  reduced
-                    ? { opacity: 1 }
-                    : { opacity: 0, scale: 0.88, color: '#d4f3ff' }
-                }
-                animate={{ opacity: 1, scale: 1 }}
-                transition={
-                  reduced
-                    ? { duration: 0 }
-                    : {
-                        opacity: { duration: 0.12, delay: revealDelay },
-                        scale: { duration: 0.28, delay: revealDelay, ease },
-                      }
-                }
-              >
-                {letter}
-              </motion.span>
-            </motion.span>
-          )
-        })}
-      </span>
+        <PhoneBrandLogo size="3xl" loading />
+      </motion.div>
     </div>
   )
 }
@@ -121,14 +66,14 @@ export const LightningLoadOverlay = ({ progress, visible }: LightningLoadOverlay
           aria-label={`Lumtek cargando: ${progress} por ciento`}
         >
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(0,168,255,0.14),transparent_62%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_34%,rgba(0,168,255,0.36),transparent_58%)]"
             aria-hidden
           />
 
           <LumtekLoadingBrand reduced={reduced} />
 
           <motion.p
-            className="relative z-10 mt-6 text-3xl font-bold tabular-nums tracking-tight text-white"
+            className="relative z-10 mt-4 text-3xl font-bold tabular-nums tracking-tight text-white"
             key={progress}
             initial={reduced ? false : { opacity: 0.75, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}

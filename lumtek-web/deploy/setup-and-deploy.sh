@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Aprovisiona una VPS nueva (Nginx + SSL nip.io) y despliega Lumtek en un solo paso.
+# Aprovisiona una VPS nueva (Nginx + SSL) y despliega Lumtek en un solo paso.
 #
 # Uso (VPS nueva):
 #   export LUMTEK_VPS_IP=203.0.113.10
@@ -45,7 +45,7 @@ LUMTEK_SITE_PREFIX="${LUMTEK_SITE_PREFIX:-lumtek}"
 LUMTEK_DEPLOY_PATH="${LUMTEK_DEPLOY_PATH:-/var/www/lumtek}"
 LUMTEK_CERTBOT_EMAIL="${LUMTEK_CERTBOT_EMAIL:-}"
 LUMTEK_DEPLOY_HOST="${LUMTEK_DEPLOY_HOST:-${LUMTEK_VPS_USER}@${LUMTEK_VPS_IP}}"
-LUMTEK_DOMAIN="${LUMTEK_DOMAIN:-${LUMTEK_SITE_PREFIX}.${LUMTEK_VPS_IP}.nip.io}"
+LUMTEK_DOMAIN="${LUMTEK_DOMAIN:-lumtek.es}"
 
 HOST="${LUMTEK_DEPLOY_HOST}"
 TMP_NGINX="$(mktemp)"

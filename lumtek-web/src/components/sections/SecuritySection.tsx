@@ -10,7 +10,7 @@ export const SecuritySection = () => {
     <section id="seguridad" className="section-y relative overflow-hidden bg-sky-50/80">
       <div className="mx-auto max-w-7xl section-x">
         <SectionTitle
-          eyebrow="Seguridad"
+          eyebrow="Acceso a seguridad"
           title="Una instalación inteligente debe ser también una instalación segura"
           description="Cada cámara, sensor, panel o dispositivo conectado debe instalarse con criterios de seguridad. La domótica y los sistemas inteligentes ofrecen grandes ventajas, pero necesitan configuración adecuada, accesos protegidos, redes bien definidas, permisos controlados y mantenimiento para funcionar de manera segura y fiable."
         />

@@ -96,7 +96,7 @@ export const coreNodes: CoreNode[] = [
   },
   {
     id: 'seguridad',
-    title: 'Seguridad',
+    title: 'Acceso a seguridad',
     icon: 'Shield',
     description:
       'Protege la instalación con accesos validados, comunicaciones cifradas y buenas prácticas de configuración.',

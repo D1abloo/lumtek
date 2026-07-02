@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
 import type { AppSection } from '../../data/appSections'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
-import { SectionAppLogo } from './SectionAppLogo'
 import { SectionInteractiveImage } from './SectionInteractiveImage'
 import { PhoneNavBar } from './PhoneNavBar'
+import { PhoneBrandLogo } from './PhoneBrandLogo'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -33,15 +33,7 @@ export const LumtekSectionDetail = ({ section, onBack }: LumtekSectionDetailProp
         }`}
       >
         <div className="flex items-start gap-2">
-          <span
-            className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 shadow-[0_0_16px_rgba(0,168,255,0.3)] ${
-              isVentanas
-                ? 'bg-white/90 ring-lumtek-blue/25'
-                : 'bg-lumtek-blue/15 ring-lumtek-cyan/25'
-            }`}
-          >
-            <SectionAppLogo id={section.id} className="h-5 w-5" glow />
-          </span>
+          <PhoneBrandLogo size="sm" className="mt-0.5 shrink-0" />
           <div className="min-w-0 flex-1 overflow-hidden">
             <p
               className={`truncate font-app-body text-[9px] font-semibold uppercase tracking-[0.1em] ${
