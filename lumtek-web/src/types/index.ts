@@ -62,7 +62,6 @@ export type UseCase = {
   description: string
   details: string[]
   image: string
-  imageRemote?: string
   alt: string
   icon?: string
 }
@@ -93,7 +92,6 @@ export type FictionalCamera = {
   signal: string
   description: string
   image: string
-  imageRemote?: string
   alt: string
   gradient: string
 }

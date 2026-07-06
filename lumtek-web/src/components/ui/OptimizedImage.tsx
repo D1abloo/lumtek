@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 type OptimizedImageProps = {
   src: string
-  fallbackSrc?: string
   alt: string
   className?: string
   wrapperClassName?: string
@@ -12,23 +11,16 @@ type OptimizedImageProps = {
 
 export const OptimizedImage = ({
   src,
-  fallbackSrc,
   alt,
   className = 'h-full w-full object-cover',
   wrapperClassName = '',
   priority = false,
   sizes = '(max-width: 768px) 100vw, 40vw',
 }: OptimizedImageProps) => {
-  const [source, setSource] = useState(src)
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
 
   const handleError = () => {
-    if (fallbackSrc && source !== fallbackSrc) {
-      setSource(fallbackSrc)
-      setLoaded(false)
-      return
-    }
     setFailed(true)
   }
 
@@ -48,7 +40,7 @@ export const OptimizedImage = ({
         <div className="absolute inset-0 animate-pulse bg-lumtek-muted" aria-hidden />
       )}
       <img
-        src={source}
+        src={src}
         alt={alt}
         className={`${className} transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
         loading={priority ? 'eager' : 'lazy'}

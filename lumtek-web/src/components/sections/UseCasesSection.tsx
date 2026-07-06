@@ -53,7 +53,6 @@ const ApplicationCard = ({
         <div className="relative aspect-[16/10] overflow-hidden">
           <OptimizedImage
             src={item.image}
-            fallbackSrc={item.imageRemote}
             alt={item.alt}
             priority={index === 0}
             sizes="(max-width: 768px) 100vw, 38vw"
@@ -72,7 +71,7 @@ const ApplicationCard = ({
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-display text-[10px] font-semibold uppercase tracking-[0.18em] text-lumtek-blue">
-                Aplicación Lumtek
+                Aplicación
               </p>
               <h3 className="mt-1 font-display text-lg font-bold text-lumtek-text md:text-xl">
                 {item.title}
@@ -223,7 +222,6 @@ const MobileApplicationItem = ({
         <div className="relative aspect-[16/10] overflow-hidden">
           <OptimizedImage
             src={item.image}
-            fallbackSrc={item.imageRemote}
             alt={item.alt}
             priority={index === 0}
             sizes="100vw"
@@ -295,7 +293,7 @@ export const UseCasesSection = () => {
 
       <div className="relative mx-auto max-w-6xl section-x">
         <SectionTitle
-          eyebrow="Aplicaciones Lumtek"
+          eyebrow="Aplicaciones"
           title="Soluciones para cada tipo de espacio"
           description="Domótica, cámaras, accesos, automatización y seguridad aplicadas a viviendas, comunidades, oficinas, negocios y edificios."
           center

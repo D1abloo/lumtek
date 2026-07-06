@@ -3,11 +3,6 @@ import { motion } from 'framer-motion'
 import { siteContent } from '../../data/siteContent'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { scrollToTop } from '../../utils/scroll'
-import {
-  FallingLightning,
-  LETTER_STAGGER_S,
-  STRIKE_IMPACT_OFFSET_S,
-} from './FallingLightning'
 
 import { LUMTEK_MARK_SRC } from '../hero/AppBrandMark'
 
@@ -31,6 +26,7 @@ const letterShadow = (struck = false) => {
 }
 
 const ease = [0.22, 1, 0.36, 1] as const
+const LETTER_STAGGER_S = 0.06
 
 const sizeMap = {
   sm: 36,
@@ -98,41 +94,21 @@ const AnimatedLogoMark = ({ size, instant }: AnimatedLogoMarkProps) => {
   const reduced = useReducedMotion()
   const h = logoHeightMap[size]
   const w = Math.round(h * ASPECT)
-  const delay = 0
-  const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
+  const revealDelay = instant ? 0 : 0.12
 
   return (
     <motion.span
       className="relative inline-block shrink-0 overflow-visible"
       style={{ width: w, height: h }}
     >
-      <FallingLightning delay={delay} reduced={instant} />
       <motion.span
         className="relative z-10 block h-full w-full"
-        initial={
-          instant
-            ? { opacity: 1, scale: 1, filter: 'none' }
-            : { opacity: 0, scale: 0.82, filter: 'brightness(1.7) drop-shadow(0 0 14px rgba(0,168,255,0.65))' }
-        }
-        animate={{
-          opacity: 1,
-          scale: 1,
-          filter: instant
-            ? 'none'
-            : [
-                'brightness(1.5) drop-shadow(0 0 18px rgba(0,210,255,0.85))',
-                'brightness(1.08) drop-shadow(0 0 10px rgba(0,168,255,0.45))',
-                'none',
-              ],
-        }}
+        initial={instant ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={
           instant
             ? { duration: 0 }
-            : {
-                opacity: { duration: 0.12, delay: revealDelay },
-                scale: { duration: 0.32, delay: revealDelay, ease },
-                filter: { duration: 0.55, delay: revealDelay, ease, times: [0, 0.35, 1] },
-              }
+            : { duration: 0.32, delay: revealDelay, ease }
         }
       >
         <img
@@ -214,10 +190,8 @@ const ColoredWordmark = ({
     >
       {showMark && <AnimatedLogoMark size={size} instant={instant} />}
       {letters.map((letter, index) => {
-        const delay = (index + 1) * LETTER_STAGGER_S
-        const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
+        const revealDelay = instant ? 0 : (index + 1) * LETTER_STAGGER_S
         const restShadow = letterShadow()
-        const struckShadow = letterShadow(true)
         const isAccent = letterIsAccent(index)
 
         return (
@@ -225,7 +199,6 @@ const ColoredWordmark = ({
             key={`${letter}-${index}`}
             className="relative inline-block overflow-visible px-[2px]"
           >
-            <FallingLightning delay={delay} reduced={instant} />
             {isAccent ? (
               <AccentLetter letter={letter} reduced={instant} revealDelay={revealDelay} />
             ) : (
@@ -234,39 +207,18 @@ const ColoredWordmark = ({
                 initial={
                   instant
                     ? { opacity: 1, color: WORDMARK.ink, textShadow: restShadow }
-                    : {
-                        opacity: 0,
-                        color: WORDMARK.strike,
-                        scale: 0.88,
-                        textShadow: '0 0 16px rgba(0,168,255,0.5)',
-                      }
+                    : { opacity: 0, y: 6, color: WORDMARK.ink }
                 }
                 animate={{
                   opacity: 1,
                   color: WORDMARK.ink,
-                  scale: 1,
-                  textShadow: instant
-                    ? restShadow
-                    : [
-                        '0 0 18px rgba(0,168,255,0.55)',
-                        struckShadow,
-                        restShadow,
-                      ],
+                  y: 0,
+                  textShadow: restShadow,
                 }}
                 transition={
                   instant
                     ? { duration: 0 }
-                    : {
-                        opacity: { duration: 0.12, delay: revealDelay },
-                        color: { duration: 0.35, delay: revealDelay },
-                        scale: { duration: 0.28, delay: revealDelay, ease },
-                        textShadow: {
-                          duration: 0.55,
-                          delay: revealDelay,
-                          ease,
-                          times: [0, 0.35, 1],
-                        },
-                      }
+                    : { duration: 0.28, delay: revealDelay, ease }
                 }
               >
                 {letter}

@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion'
 import { technologies } from '../../data/technologies'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { getIcon } from '../../utils/icons'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { SectionTitle } from '../ui/SectionTitle'
 
 export const DomoticsSection = () => {
+  const reduced = useReducedMotion()
+
   return (
     <section id="domotica" className="section-y relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl section-x">
@@ -20,8 +23,9 @@ export const DomoticsSection = () => {
             return (
               <AnimatedReveal key={tech.title} delay={i * 0.05}>
                 <motion.article
-                  className="card-shine group h-full rounded-2xl border border-lumtek-border bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-lumtek-blue/25 hover:shadow-card"
-                  whileHover={{ y: -4 }}
+                  className="card-shine group h-full rounded-2xl border border-lumtek-border bg-white p-6 shadow-soft transition-all hover:border-lumtek-blue/25 hover:shadow-card"
+                  whileHover={reduced ? {} : { y: -4 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-lumtek-blue/8 text-lumtek-blue">
                     <Icon className="h-5 w-5" strokeWidth={1.75} />

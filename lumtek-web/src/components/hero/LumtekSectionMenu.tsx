@@ -10,11 +10,42 @@ import { SectionAppLogo } from './SectionAppLogo'
 const ease = [0.22, 1, 0.36, 1] as const
 const spring = { type: 'spring' as const, stiffness: 320, damping: 30 }
 
-const sparkleOffsets = [
-  { left: '14%', top: '28%', delay: 0.04 },
-  { left: '78%', top: '48%', delay: 0.1 },
-  { left: '52%', top: '18%', delay: 0.07 },
-] as const
+type ElectricRevealProps = {
+  index: number
+  reduced: boolean
+}
+
+const ElectricReveal = ({ index, reduced }: ElectricRevealProps) => {
+  if (reduced) return null
+
+  const delay = 0.16 + index * 0.07
+
+  return (
+    <motion.span
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
+      aria-hidden
+    >
+      <motion.span
+        className="absolute inset-y-[-20%] w-[38%] bg-gradient-to-r from-transparent via-lumtek-cyan/35 to-transparent"
+        initial={{ x: '-130%', opacity: 0 }}
+        animate={{ x: ['-130%', '220%'], opacity: [0, 0.85, 0] }}
+        transition={{ duration: 0.65, delay, ease }}
+      />
+      <motion.span
+        className="pointer-events-none absolute inset-0 rounded-2xl"
+        initial={{ boxShadow: '0 0 0 rgba(0,168,255,0)' }}
+        animate={{
+          boxShadow: [
+            '0 0 0 rgba(0,168,255,0)',
+            '0 0 14px rgba(0,168,255,0.35)',
+            '0 0 0 rgba(0,168,255,0)',
+          ],
+        }}
+        transition={{ duration: 0.5, delay, ease }}
+      />
+    </motion.span>
+  )
+}
 
 const listVariants = {
   hidden: {},
@@ -26,73 +57,6 @@ const listVariants = {
 const itemVariants = {
   hidden: { opacity: 0, y: 16, scale: 0.94 },
   show: { opacity: 1, y: 0, scale: 1, transition: spring },
-}
-
-type ElectricRevealProps = {
-  index: number
-  reduced: boolean
-}
-
-const ElectricReveal = ({ index, reduced }: ElectricRevealProps) => {
-  if (reduced) return null
-
-  const delay = 0.2 + index * 0.1
-
-  return (
-    <>
-      <motion.span
-        className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
-        aria-hidden
-      >
-        <motion.span
-          className="absolute inset-y-[-25%] w-[42%] bg-gradient-to-r from-transparent via-[#8ef6ff] to-transparent opacity-90 shadow-[0_0_20px_rgba(125,243,255,0.95)]"
-          initial={{ x: '-140%', opacity: 0 }}
-          animate={{ x: ['-140%', '240%'], opacity: [0, 1, 0.85, 0] }}
-          transition={{ duration: 0.58, delay, ease }}
-        />
-      </motion.span>
-      <motion.svg
-        className="pointer-events-none absolute left-[10%] top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b8fcff]"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.4, x: -6 }}
-        animate={{ opacity: [0, 1, 0], scale: [0.4, 1.1, 0.6], x: [-6, 4, 10] }}
-        transition={{ duration: 0.42, delay: delay + 0.04, ease }}
-      >
-        <path
-          d="M13 2 5 14h6l-1 8 9-14h-6l1-6z"
-          fill="currentColor"
-          stroke="#e8feff"
-          strokeWidth="0.5"
-        />
-      </motion.svg>
-      {sparkleOffsets.map((s, i) => (
-        <motion.span
-          key={i}
-          className="pointer-events-none absolute h-1 w-1 rounded-full bg-[#e8feff] shadow-[0_0_7px_2px_rgba(125,243,255,0.95)]"
-          style={{ left: s.left, top: s.top }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0.2] }}
-          transition={{ duration: 0.38, delay: delay + s.delay, ease }}
-          aria-hidden
-        />
-      ))}
-      <motion.span
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        initial={{ boxShadow: '0 0 0 rgba(0,210,255,0)' }}
-        animate={{
-          boxShadow: [
-            '0 0 0 rgba(0,210,255,0)',
-            '0 0 18px rgba(0,210,255,0.55), inset 0 0 12px rgba(125,243,255,0.15)',
-            '0 0 0 rgba(0,210,255,0)',
-          ],
-        }}
-        transition={{ duration: 0.55, delay, ease }}
-        aria-hidden
-      />
-    </>
-  )
 }
 
 type SectionMenuItemProps = {
@@ -199,7 +163,7 @@ export const LumtekSectionMenu = ({ onSelect, canForward, onForward }: LumtekSec
     <div className="relative flex h-full flex-col overflow-hidden bg-[#f2f8fd] phone-text-crisp">
       <MountainBackdrop />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-2.5 pb-14 pt-2">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-2.5 pb-14 pt-2">
         <motion.div
           className="pointer-events-none mb-2 h-px w-12 bg-gradient-to-r from-transparent via-lumtek-blue/40 to-transparent"
           initial={reduced ? false : { scaleX: 0, opacity: 0 }}

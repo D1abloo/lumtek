@@ -1,5 +1,7 @@
 import { Camera, ChevronRight, Radio, Shield, Smartphone } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { siteContent } from '../../data/siteContent'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { GlowButton } from '../ui/GlowButton'
 import { HeroVisualBackground } from './HeroVisualBackground'
@@ -9,6 +11,7 @@ const highlightIcons = [Smartphone, Camera, Radio, Shield]
 
 export const Hero = () => {
   const { hero } = siteContent
+  const reduced = useReducedMotion()
 
   return (
     <section
@@ -21,13 +24,13 @@ export const Hero = () => {
         <div className="grid items-center gap-8 sm:gap-10 md:grid-cols-2 md:gap-10 lg:gap-12 xl:gap-16">
           <div className="order-2 text-center md:order-1 md:text-left">
             <AnimatedReveal>
-              <h1 className="mx-auto max-w-3xl text-[1.65rem] font-bold leading-[1.14] tracking-tight text-lumtek-text xs:text-[1.75rem] sm:max-w-2xl sm:text-4xl md:mx-0 md:max-w-xl md:text-[2.35rem] md:leading-[1.1] xl:max-w-2xl xl:text-[2.65rem]">
+              <h1 className="text-balance mx-auto max-w-3xl text-[1.65rem] font-bold leading-[1.14] tracking-tight text-lumtek-text xs:text-[1.75rem] sm:max-w-2xl sm:text-4xl md:mx-0 md:max-w-xl md:text-[2.35rem] md:leading-[1.1] xl:max-w-2xl xl:text-[2.65rem]">
                 {hero.title}
               </h1>
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.06}>
-              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-lumtek-text-secondary sm:mt-5 sm:max-w-2xl sm:text-lg md:mx-0">
+              <p className="text-pretty mx-auto mt-4 max-w-xl text-base leading-relaxed text-lumtek-text-secondary sm:mt-5 sm:max-w-2xl sm:text-lg md:mx-0">
                 {hero.subtitle}
               </p>
             </AnimatedReveal>
@@ -46,20 +49,37 @@ export const Hero = () => {
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.18} className="mt-7 sm:mt-8">
-              <ul className="grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-x-4 xs:gap-y-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-6 md:justify-start">
+              <motion.ul
+                className="grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-x-4 xs:gap-y-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-6 md:justify-start"
+                initial={reduced ? false : 'hidden'}
+                whileInView={reduced ? undefined : 'visible'}
+                viewport={{ once: true }}
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+                }}
+              >
                 {hero.highlights.map((item, i) => {
                   const Icon = highlightIcons[i]
                   return (
-                    <li
+                    <motion.li
                       key={item}
+                      variants={
+                        reduced
+                          ? undefined
+                          : { hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }
+                      }
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                       className="flex items-center justify-center gap-2 text-xs text-lumtek-text-secondary sm:justify-start sm:text-sm"
                     >
-                      <Icon className="h-3.5 w-3.5 shrink-0 text-lumtek-blue sm:h-4 sm:w-4" strokeWidth={1.75} />
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-lumtek-blue/8 text-lumtek-blue ring-1 ring-lumtek-blue/10">
+                        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.75} />
+                      </span>
                       {item}
-                    </li>
+                    </motion.li>
                   )
                 })}
-              </ul>
+              </motion.ul>
             </AnimatedReveal>
           </div>
 

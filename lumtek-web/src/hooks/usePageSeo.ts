@@ -14,6 +14,7 @@ export type PageSeoConfig = {
   description: string
   path?: string
   image?: string
+  imageAlt?: string
   noindex?: boolean
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
   includeSiteGraph?: boolean
@@ -55,6 +56,7 @@ export const applyPageSeo = ({
   description,
   path = '/',
   image = DEFAULT_OG_IMAGE,
+  imageAlt = 'Lumtek — domótica y sistemas inteligentes',
   noindex = false,
   jsonLd,
   includeSiteGraph = false,
@@ -73,11 +75,13 @@ export const applyPageSeo = ({
   setMeta('property', 'og:description', description)
   setMeta('property', 'og:url', url)
   setMeta('property', 'og:image', image)
+  setMeta('property', 'og:image:alt', imageAlt)
 
   setMeta('name', 'twitter:card', 'summary_large_image')
   setMeta('name', 'twitter:title', title)
   setMeta('name', 'twitter:description', description)
   setMeta('name', 'twitter:image', image)
+  setMeta('name', 'twitter:image:alt', imageAlt)
 
   if (jsonLd) {
     setJsonLd(jsonLd)

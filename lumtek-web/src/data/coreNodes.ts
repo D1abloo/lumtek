@@ -1,7 +1,24 @@
 import type { CoreNode } from '../types'
 
 export const CORE_RING_RADIUS = 180
-const STEP = 360 / 8
+const STEP = 360 / 7
+
+/** Capacidad de seguridad integrada en el núcleo (no orbita el anillo). */
+export const coreHubNode: CoreNode = {
+  id: 'seguridad',
+  title: 'Seguridad',
+  icon: 'Shield',
+  description:
+    'Protege la instalación con accesos validados, comunicaciones cifradas y buenas prácticas de configuración.',
+  highlights: [
+    'Usuarios y permisos controlados',
+    'Conexiones cifradas',
+    'Separación de redes y dispositivos',
+    'Auditoría de eventos críticos',
+  ],
+  angle: 0,
+  radius: 0,
+}
 
 export const coreNodes: CoreNode[] = [
   {
@@ -95,21 +112,6 @@ export const coreNodes: CoreNode[] = [
     radius: CORE_RING_RADIUS,
   },
   {
-    id: 'seguridad',
-    title: 'Acceso a seguridad',
-    icon: 'Shield',
-    description:
-      'Protege la instalación con accesos validados, comunicaciones cifradas y buenas prácticas de configuración.',
-    highlights: [
-      'Usuarios y permisos controlados',
-      'Conexiones cifradas',
-      'Separación de redes y dispositivos',
-      'Auditoría de eventos críticos',
-    ],
-    angle: -90 + STEP * 6,
-    radius: CORE_RING_RADIUS,
-  },
-  {
     id: 'integracion',
     title: 'Integración',
     icon: 'Network',
@@ -121,7 +123,7 @@ export const coreNodes: CoreNode[] = [
       'Ampliación modular',
       'Supervisión centralizada',
     ],
-    angle: -90 + STEP * 7,
+    angle: -90 + STEP * 6,
     radius: CORE_RING_RADIUS,
   },
 ]

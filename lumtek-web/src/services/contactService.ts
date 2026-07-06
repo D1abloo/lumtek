@@ -2,7 +2,7 @@ import type { ContactFormData } from '../types'
 
 export type ContactResult = { ok: true } | { ok: false; message: string }
 
-export const sendContactForm = async (data: ContactFormData): Promise<ContactResult> => {
+export const sendContactForm = async (data: ContactFormData, hp = ''): Promise<ContactResult> => {
   const endpoint =
     (import.meta.env.VITE_CONTACT_ENDPOINT as string | undefined) || '/api/contact'
 
@@ -20,6 +20,7 @@ export const sendContactForm = async (data: ContactFormData): Promise<ContactRes
         city: data.city ?? '',
         contactPreference: data.contactPreference ?? '',
         privacyAccepted: data.privacyAccepted,
+        _hp: hp,
       }),
     })
 

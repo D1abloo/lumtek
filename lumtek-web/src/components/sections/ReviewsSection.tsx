@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { reviews, reviewsDisclaimer } from '../../data/reviews'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { SectionTitle } from '../ui/SectionTitle'
 
@@ -17,6 +18,8 @@ const StarRating = ({ rating }: { rating: number }) => (
 )
 
 export const ReviewsSection = () => {
+  const reduced = useReducedMotion()
+
   return (
     <section id="resenas" className="section-y relative overflow-hidden bg-[#f0f9ff]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,168,255,0.06),transparent_60%)]" />
@@ -33,12 +36,13 @@ export const ReviewsSection = () => {
           {reviews.map((review, i) => (
             <AnimatedReveal key={review.id} delay={i * 0.05}>
               <motion.article
-                className="group flex h-full flex-col rounded-2xl border border-lumtek-border/80 bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-lumtek-blue/30 hover:shadow-glow"
-                whileHover={{ y: -4 }}
+                className="card-shine group flex h-full flex-col rounded-2xl border border-lumtek-border/80 bg-white p-6 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-lumtek-blue/30 hover:shadow-glow"
+                whileHover={reduced ? {} : { y: -4 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
               >
                 <StarRating rating={review.rating} />
 
-                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-lumtek-text-secondary">
+                <blockquote className="text-pretty mt-4 flex-1 text-sm leading-relaxed text-lumtek-text-secondary">
                   &ldquo;{review.comment}&rdquo;
                 </blockquote>
 

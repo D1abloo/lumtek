@@ -1,16 +1,12 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
-import {
-  FallingLightning,
-  LETTER_STAGGER_S,
-  STRIKE_IMPACT_OFFSET_S,
-} from '../ui/FallingLightning'
 import { PhoneBrandLogo } from './PhoneBrandLogo'
 
 const UNLOCK_FADE_S = 2.5
 const ease = [0.22, 1, 0.36, 1] as const
 const LOCKED_TEXT = 'Bloqueado'
+const LETTER_STAGGER_S = 0.06
 
 type PhoneLockedScreenProps = {
   unlocking: boolean
@@ -26,54 +22,20 @@ type AnimatedLetterProps = {
 }
 
 const AnimatedLetter = ({ letter, index, instant }: AnimatedLetterProps) => {
-  const delay = (index + 1) * LETTER_STAGGER_S
-  const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
+  const revealDelay = instant ? 0 : (index + 1) * LETTER_STAGGER_S
 
   return (
-    <motion.span className="relative inline-block overflow-visible px-[1px]">
-      <FallingLightning delay={delay} reduced={instant} />
-      <motion.span
-        className="relative z-10 inline-block"
-        initial={
-          instant
-            ? { opacity: 1, color: '#f1f5f9', textShadow: '0 1px 0 #94a3b8' }
-            : {
-                opacity: 0,
-                color: '#d4f3ff',
-                scale: 0.88,
-                textShadow: '0 0 16px rgba(0,168,255,0.5)',
-              }
-        }
-        animate={{
-          opacity: 1,
-          color: '#f1f5f9',
-          scale: 1,
-          textShadow: instant
-            ? '0 1px 0 #94a3b8'
-            : [
-                '0 0 18px rgba(0,168,255,0.55)',
-                '0 0 14px rgba(0,168,255,0.42), 0 1px 0 #94a3b8',
-                '0 1px 0 #94a3b8',
-              ],
-        }}
-        transition={
-          instant
-            ? { duration: 0 }
-            : {
-                opacity: { duration: 0.12, delay: revealDelay },
-                color: { duration: 0.35, delay: revealDelay },
-                scale: { duration: 0.28, delay: revealDelay, ease },
-                textShadow: {
-                  duration: 0.55,
-                  delay: revealDelay,
-                  ease,
-                  times: [0, 0.35, 1],
-                },
-              }
-        }
-      >
-        {letter}
-      </motion.span>
+    <motion.span
+      className="inline-block px-[1px]"
+      initial={instant ? { opacity: 1, color: '#f1f5f9' } : { opacity: 0, y: 6 }}
+      animate={{ opacity: 1, color: '#f1f5f9', y: 0 }}
+      transition={
+        instant
+          ? { duration: 0 }
+          : { duration: 0.28, delay: revealDelay, ease }
+      }
+    >
+      {letter}
     </motion.span>
   )
 }
@@ -82,54 +44,22 @@ type AnimatedBrandLogoProps = {
   instant: boolean
 }
 
-const AnimatedBrandLogo = ({ instant }: AnimatedBrandLogoProps) => {
-  const delay = 0
-  const revealDelay = instant ? 0 : delay + STRIKE_IMPACT_OFFSET_S
-
-  return (
-    <motion.span className="relative inline-flex shrink-0 items-center justify-center overflow-visible leading-none">
-      <span
-        className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.28),rgba(34,211,238,0.12)_45%,transparent_72%)] blur-md"
-        aria-hidden
-      />
-      <FallingLightning delay={delay} reduced={instant} />
-      <motion.span
-        className="relative z-10"
-        initial={
-          instant
-            ? { opacity: 1, scale: 1, filter: 'brightness(1.38) contrast(1.16) saturate(1.12)' }
-            : {
-                opacity: 0,
-                scale: 0.84,
-                filter: 'brightness(1.45) contrast(1.18) saturate(1.15) drop-shadow(0 0 30px rgba(0,168,255,0.9))',
-              }
-        }
-        animate={{
-          opacity: 1,
-          scale: 1,
-          filter: instant
-            ? 'brightness(1.38) contrast(1.16) saturate(1.12)'
-            : [
-                'brightness(1.5) contrast(1.2) saturate(1.15) drop-shadow(0 0 34px rgba(0,210,255,0.95))',
-                'brightness(1.42) contrast(1.17) saturate(1.13) drop-shadow(0 0 24px rgba(0,168,255,0.75))',
-                'brightness(1.38) contrast(1.16) saturate(1.12) drop-shadow(0 0 18px rgba(0,168,255,0.55))',
-              ],
-        }}
-        transition={
-          instant
-            ? { duration: 0 }
-            : {
-                opacity: { duration: 0.12, delay: revealDelay },
-                scale: { duration: 0.34, delay: revealDelay, ease },
-                filter: { duration: 0.6, delay: revealDelay, ease, times: [0, 0.35, 1] },
-              }
-        }
-      >
-        <PhoneBrandLogo size="xl" bright />
-      </motion.span>
+const AnimatedBrandLogo = ({ instant }: AnimatedBrandLogoProps) => (
+  <motion.span className="relative inline-flex shrink-0 items-center justify-center overflow-visible leading-none">
+    <span
+      className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.28),rgba(34,211,238,0.12)_45%,transparent_72%)] blur-md"
+      aria-hidden
+    />
+    <motion.span
+      className="relative z-10"
+      initial={instant ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.35, ease }}
+    >
+      <PhoneBrandLogo size="xl" bright />
     </motion.span>
-  )
-}
+  </motion.span>
+)
 
 type LockRevealProps = {
   revealKey: number

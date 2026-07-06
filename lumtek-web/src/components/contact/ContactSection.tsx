@@ -28,10 +28,10 @@ export const ContactSection = ({
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-lumtek-blue sm:text-xs sm:tracking-[0.2em]">
               Contacto
             </p>
-            <h2 className="mt-3 text-2xl font-bold text-lumtek-text sm:text-3xl md:text-4xl">
+            <h2 className="text-balance mt-3 text-2xl font-bold text-lumtek-text sm:text-3xl md:text-4xl">
               Hablemos de tu instalación
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-lumtek-text-secondary sm:text-base">
+            <p className="text-pretty mt-4 text-sm leading-relaxed text-lumtek-text-secondary sm:text-base">
               Cuéntanos qué necesitas automatizar, proteger o controlar. Te ayudamos a definir una
               solución de domótica y sistemas adaptada a tu espacio.
             </p>

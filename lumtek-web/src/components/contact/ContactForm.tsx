@@ -43,6 +43,7 @@ type ContactFormProps = {
 
 export const ContactForm = ({ compact = false }: ContactFormProps) => {
   const [data, setData] = useState<ContactFormData>(initialData)
+  const [hp, setHp] = useState('')
   const [errors, setErrors] = useState<ContactFormErrors>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -75,7 +76,7 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
 
     setStatus('loading')
     setProgress(0)
-    const result = await sendContactForm(data)
+    const result = await sendContactForm(data, hp)
 
     if (result.ok) {
       setProgress(100)
@@ -117,7 +118,17 @@ export const ContactForm = ({ compact = false }: ContactFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit} className="relative space-y-4" noValidate>
+      <input
+        type="text"
+        name="_hp"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+        value={hp}
+        onChange={(e) => setHp(e.target.value)}
+        className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className={compact ? 'space-y-4' : 'grid gap-4 sm:grid-cols-2 md:gap-5'}>
         <Field label="Nombre *" error={errors.name}>
           <input

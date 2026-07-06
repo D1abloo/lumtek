@@ -1,5 +1,7 @@
 import { Bell, Camera, KeyRound, Lightbulb } from 'lucide-react'
+import { motion } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { MobilePhoneShowcase } from './MobilePhoneShowcase'
 
@@ -26,13 +28,20 @@ const benefits: { icon: LucideIcon; title: string; text: string }[] = [
   },
 ]
 
-const BenefitList = () => (
+const BenefitList = () => {
+  const reduced = useReducedMotion()
+
+  return (
   <ul className="space-y-4">
     {benefits.map((item, i) => {
       const Icon = item.icon
       return (
         <AnimatedReveal key={item.title} delay={0.06 + i * 0.05}>
-          <li className="flex gap-3 rounded-xl border border-lumtek-border/70 bg-white/70 p-4 shadow-soft backdrop-blur-sm">
+          <motion.li
+            className="card-shine flex gap-3 rounded-xl border border-lumtek-border/70 bg-white/80 p-4 shadow-soft backdrop-blur-sm"
+            whileHover={reduced ? {} : { x: 4 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-lumtek-blue/10 text-lumtek-blue">
               <Icon className="h-4 w-4" strokeWidth={2} aria-hidden />
             </span>
@@ -42,17 +51,18 @@ const BenefitList = () => (
                 {item.text}
               </p>
             </div>
-          </li>
+          </motion.li>
         </AnimatedReveal>
       )
     })}
   </ul>
-)
+  )
+}
 
 export const MobileControlSection = () => {
   return (
     <section
-      id="camaras"
+      id="control-movil"
       className="section-y relative overflow-hidden bg-gradient-to-b from-white to-[#f0f9ff]/80"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,168,255,0.06),transparent_55%)]" />
@@ -63,10 +73,10 @@ export const MobileControlSection = () => {
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-lumtek-blue">
               Control móvil
             </p>
-            <h2 className="mt-3 text-2xl font-bold leading-tight tracking-tight text-lumtek-text sm:text-3xl lg:text-4xl">
+            <h2 className="text-balance mt-3 text-2xl font-bold leading-tight tracking-tight text-lumtek-text sm:text-3xl lg:text-4xl">
               Supervisa cámaras, accesos y automatizaciones desde una sola app
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-lumtek-text-secondary sm:text-base">
+            <p className="text-pretty mt-4 text-sm leading-relaxed text-lumtek-text-secondary sm:text-base">
               Lumtek permite centralizar cámaras, accesos, sensores y escenas domóticas en una
               experiencia sencilla. Desde el móvil puedes comprobar el estado de tu espacio,
               visualizar cámaras en directo y recibir información útil sin complicaciones.

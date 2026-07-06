@@ -1,47 +1,29 @@
-import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { PhoneBrandLogo } from '../hero/PhoneBrandLogo'
-import { FallingLightning } from './FallingLightning'
 
 const ease = [0.22, 1, 0.36, 1] as const
-const STRIKE_INTERVAL_MS = 520
 
 type LumtekLoadingBrandProps = {
   reduced: boolean
 }
 
-const LumtekLoadingBrand = ({ reduced }: LumtekLoadingBrandProps) => {
-  const [logoStrike, setLogoStrike] = useState(0)
-
-  useEffect(() => {
-    if (reduced) return
-    const id = window.setInterval(() => setLogoStrike((k) => k + 1), STRIKE_INTERVAL_MS)
-    return () => window.clearInterval(id)
-  }, [reduced])
-
-  return (
-    <div className="relative flex flex-col items-center">
-      <span
-        className="pointer-events-none absolute -inset-20 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.45),rgba(34,211,238,0.2)_38%,transparent_68%)] blur-xl"
-        aria-hidden
-      />
-      {!reduced && (
-        <span key={logoStrike} className="absolute -top-4 left-1/2 z-20 -translate-x-1/2">
-          <FallingLightning delay={0} reduced={false} />
-        </span>
-      )}
-      <motion.div
-        className="relative z-10"
-        initial={reduced ? false : { opacity: 0, scale: 0.86 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.35, ease }}
-      >
-        <PhoneBrandLogo size="3xl" loading />
-      </motion.div>
-    </div>
-  )
-}
+const LumtekLoadingBrand = ({ reduced }: LumtekLoadingBrandProps) => (
+  <div className="relative flex flex-col items-center">
+    <span
+      className="pointer-events-none absolute -inset-20 rounded-full bg-[radial-gradient(circle,rgba(0,168,255,0.45),rgba(34,211,238,0.2)_38%,transparent_68%)] blur-xl"
+      aria-hidden
+    />
+    <motion.div
+      className="relative z-10"
+      initial={reduced ? false : { opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.35, ease }}
+    >
+      <PhoneBrandLogo size="3xl" loading />
+    </motion.div>
+  </div>
+)
 
 type LightningLoadOverlayProps = {
   progress: number

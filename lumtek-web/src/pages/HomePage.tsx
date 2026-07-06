@@ -1,6 +1,7 @@
 import { Hero } from '../components/hero/Hero'
 import { BenefitsStrip } from '../components/sections/BenefitsStrip'
 import { ControlFeaturesSection } from '../components/sections/ControlFeaturesSection'
+import { MobileControlSection } from '../components/sections/MobileControlSection'
 import { DomoticsSection } from '../components/sections/DomoticsSection'
 import { SecuritySection } from '../components/sections/SecuritySection'
 import { CoreSection } from '../components/sections/CoreSection'
@@ -15,6 +16,7 @@ const HomePage = () => (
     <Hero />
     <BenefitsStrip />
     <ControlFeaturesSection />
+    <MobileControlSection />
     <DomoticsSection />
     <SecuritySection />
     <CoreSection />

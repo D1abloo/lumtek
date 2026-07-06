@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronDown } from 'lucide-react'
-import { coreNodes, CORE_RING_RADIUS } from '../../data/coreNodes'
+import { coreNodes, coreHubNode, CORE_RING_RADIUS } from '../../data/coreNodes'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { getIcon } from '../../utils/icons'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
@@ -41,7 +41,10 @@ type CoreDetailPanelProps = {
 }
 
 const CoreDetailPanel = ({ nodeId, className = '' }: CoreDetailPanelProps) => {
-  const node = coreNodes.find((n) => n.id === nodeId)
+  const node =
+    nodeId === coreHubNode.id
+      ? coreHubNode
+      : coreNodes.find((n) => n.id === nodeId)
   const Icon = node ? getIcon(node.icon) : null
 
   return (
@@ -119,6 +122,7 @@ const CoreDetailPanel = ({ nodeId, className = '' }: CoreDetailPanelProps) => {
 export const CoreSection = () => {
   const [activeNode, setActiveNode] = useState<string | null>(null)
   const reduced = useReducedMotion()
+  const HubIcon = getIcon(coreHubNode.icon)
 
   const handleClear = () => setActiveNode(null)
 
@@ -249,18 +253,32 @@ export const CoreSection = () => {
             </svg>
 
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <motion.div
-                className="pointer-events-auto relative flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full border-2 border-lumtek-blue/35 bg-white font-display text-2xl font-bold text-lumtek-blue shadow-glow"
+              <motion.button
+                type="button"
+                className={`pointer-events-auto relative flex h-[5.5rem] w-[5.5rem] flex-col items-center justify-center gap-0.5 rounded-full border-2 bg-white font-display shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-lumtek-blue ${
+                  activeNode === coreHubNode.id
+                    ? 'border-lumtek-blue text-lumtek-blue'
+                    : 'border-lumtek-blue/35 text-lumtek-blue'
+                }`}
+                onMouseEnter={() => setActiveNode(coreHubNode.id)}
+                onFocus={() => setActiveNode(coreHubNode.id)}
+                onClick={() =>
+                  setActiveNode((id) => (id === coreHubNode.id ? null : coreHubNode.id))
+                }
+                aria-pressed={activeNode === coreHubNode.id}
+                aria-label={coreHubNode.title}
                 animate={
                   reduced
                     ? {}
-                    : activeNode
+                    : activeNode === coreHubNode.id
                       ? { scale: [1, 1.1, 1], boxShadow: ['0 8px 32px rgba(0,168,255,0.15)', '0 12px 40px rgba(0,168,255,0.35)', '0 8px 32px rgba(0,168,255,0.15)'] }
-                      : { scale: [1, 1.04, 1] }
+                      : activeNode
+                        ? { scale: 1 }
+                        : { scale: [1, 1.04, 1] }
                 }
                 transition={{
-                  duration: activeNode ? 0.8 : 3,
-                  repeat: reduced ? 0 : Infinity,
+                  duration: activeNode === coreHubNode.id ? 0.8 : 3,
+                  repeat: reduced || activeNode ? 0 : Infinity,
                   ease: 'easeInOut',
                 }}
               >
@@ -273,8 +291,14 @@ export const CoreSection = () => {
                   />
                 )}
                 <span className="absolute inset-3 rounded-full border border-lumtek-blue/10" aria-hidden />
-                Core
-              </motion.div>
+                <HubIcon className="relative z-10 h-5 w-5" strokeWidth={2} />
+                <span className="relative z-10 text-[9px] font-bold uppercase leading-none tracking-wide">
+                  Core
+                </span>
+                <span className="relative z-10 max-w-[4.5rem] text-center text-[7px] font-semibold leading-tight text-lumtek-text-secondary">
+                  {coreHubNode.title}
+                </span>
+              </motion.button>
             </div>
 
             {coreNodes.map((node) => {
@@ -331,6 +355,59 @@ export const CoreSection = () => {
 
         {/* Móvil: acordeón */}
         <div className="mt-4 space-y-2 md:hidden">
+          <AnimatedReveal>
+            <div
+              className={`overflow-hidden rounded-xl border bg-white transition-colors ${
+                activeNode === coreHubNode.id
+                  ? 'border-lumtek-blue/40 shadow-glow'
+                  : 'border-lumtek-border'
+              }`}
+            >
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                onClick={() =>
+                  setActiveNode(activeNode === coreHubNode.id ? null : coreHubNode.id)
+                }
+                aria-expanded={activeNode === coreHubNode.id}
+              >
+                <span className="flex items-center gap-2.5 font-display text-sm font-semibold text-lumtek-text">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-lumtek-blue/10 text-lumtek-blue">
+                    <HubIcon className="h-4 w-4" />
+                  </span>
+                  Núcleo · {coreHubNode.title}
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 shrink-0 text-lumtek-text-secondary transition-transform ${activeNode === coreHubNode.id ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <AnimatePresence>
+                {activeNode === coreHubNode.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="border-t border-lumtek-border"
+                  >
+                    <p className="px-4 pt-3 text-sm text-lumtek-text-secondary">
+                      {coreHubNode.description}
+                    </p>
+                    <ul className="space-y-2 px-4 py-3">
+                      {coreHubNode.highlights.map((h) => (
+                        <li
+                          key={h}
+                          className="flex items-start gap-2 text-xs text-lumtek-text-secondary"
+                        >
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-lumtek-blue" />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </AnimatedReveal>
           {coreNodes.map((node, i) => {
             const isOpen = activeNode === node.id
             const NodeIcon = getIcon(node.icon)
@@ -399,6 +476,8 @@ type CoreRadialProps = {
 }
 
 const CoreRadial = ({ activeNode, onSelect, reduced }: CoreRadialProps) => {
+  const HubIcon = getIcon(coreHubNode.icon)
+
   return (
     <div className="relative aspect-square w-full">
       <svg
@@ -452,9 +531,25 @@ const CoreRadial = ({ activeNode, onSelect, reduced }: CoreRadialProps) => {
         })}
       </svg>
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="pointer-events-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-lumtek-blue/30 bg-white font-display text-xl font-bold text-lumtek-blue shadow-glow">
-          Core
-        </div>
+        <button
+          type="button"
+          className={`pointer-events-auto flex h-20 w-20 flex-col items-center justify-center gap-0.5 rounded-full border-2 bg-white font-display shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-lumtek-blue ${
+            activeNode === coreHubNode.id
+              ? 'border-lumtek-blue text-lumtek-blue'
+              : 'border-lumtek-blue/30 text-lumtek-blue'
+          }`}
+          onMouseEnter={() => onSelect(coreHubNode.id)}
+          onFocus={() => onSelect(coreHubNode.id)}
+          onClick={() => onSelect(coreHubNode.id)}
+          aria-pressed={activeNode === coreHubNode.id}
+          aria-label={coreHubNode.title}
+        >
+          <HubIcon className="h-5 w-5" strokeWidth={2} />
+          <span className="text-[10px] font-bold uppercase leading-none">Core</span>
+          <span className="max-w-[4rem] text-center text-[7px] font-semibold leading-tight text-lumtek-text-secondary">
+            {coreHubNode.title}
+          </span>
+        </button>
       </div>
       {coreNodes.map((node) => {
         const pos = getNodePosition(node)

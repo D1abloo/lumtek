@@ -89,9 +89,12 @@ export const GlowButton = ({
   }
 
   if (href) {
+    const external = href.startsWith('http')
     return (
       <motion.a
         href={href}
+        rel={external ? 'noopener noreferrer' : undefined}
+        target={external ? '_blank' : undefined}
         onClick={onClick}
         className={classes}
         aria-label={ariaLabel}

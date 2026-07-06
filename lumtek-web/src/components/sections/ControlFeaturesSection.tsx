@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion'
 import { controlFeatures } from '../../data/controlFeatures'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { getIcon } from '../../utils/icons'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { SectionTitle } from '../ui/SectionTitle'
 
 export const ControlFeaturesSection = () => {
+  const reduced = useReducedMotion()
+
   return (
     <section id="camaras" className="section-y bg-lumtek-surface">
       <div className="mx-auto max-w-7xl section-x">
@@ -21,12 +24,17 @@ export const ControlFeaturesSection = () => {
             return (
               <AnimatedReveal key={feature.title} delay={i * 0.05}>
                 <motion.article
-                  className="card-shine group h-full rounded-2xl border border-lumtek-border bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-lumtek-blue/30 hover:shadow-glow"
-                  whileHover={{ scale: 1.01 }}
+                  className="card-shine group h-full rounded-2xl border border-lumtek-border bg-white p-6 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-lumtek-blue/30 hover:shadow-glow"
+                  whileHover={reduced ? {} : { y: -3 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-lumtek-blue/10 to-lumtek-cyan/10 text-lumtek-blue">
+                  <motion.div
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-lumtek-blue/10 to-lumtek-cyan/10 text-lumtek-blue"
+                    whileHover={reduced ? {} : { rotate: -3, scale: 1.05 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
                     <Icon className="h-6 w-6" strokeWidth={1.75} />
-                  </div>
+                  </motion.div>
                   <h3 className="font-display text-base font-semibold text-lumtek-text">
                     {feature.title}
                   </h3>

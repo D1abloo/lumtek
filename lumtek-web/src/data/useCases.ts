@@ -9,7 +9,7 @@ export const getUseCaseBySlug = (slug: string): UseCaseFull | undefined => {
   return { ...base, ...content }
 }
 
-/** Imágenes temáticas: vivienda, comunidad, oficina, negocio, local y edificio (Unsplash, uso fictivo/demo). */
+/** Imágenes temáticas locales (sin dependencias externas). */
 export const useCases: UseCase[] = [
   {
     id: 'viviendas',
@@ -25,8 +25,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'House',
     image: '/images/use-cases/vivienda.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop&q=80',
     alt: 'Vivienda unifamiliar moderna con domótica y sistemas conectados',
   },
   {
@@ -43,8 +41,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'Building2',
     image: '/images/use-cases/comunidad.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop&q=80',
     alt: 'Comunidad de vecinos y edificio residencial con control de accesos',
   },
   {
@@ -61,8 +57,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'Briefcase',
     image: '/images/use-cases/oficina.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=500&fit=crop&q=80',
     alt: 'Oficina corporativa con salas conectadas y control de accesos',
   },
   {
@@ -79,8 +73,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'Store',
     image: '/images/use-cases/negocio.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&q=80',
     alt: 'Negocio con videovigilancia y sistemas de seguridad conectados',
   },
   {
@@ -97,8 +89,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'ShoppingBag',
     image: '/images/use-cases/local.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1555529669-2269763671c0?w=800&h=500&fit=crop&q=80',
     alt: 'Local comercial con videovigilancia y control remoto',
   },
   {
@@ -115,8 +105,6 @@ export const useCases: UseCase[] = [
     ],
     icon: 'Building',
     image: '/images/use-cases/edificio.webp',
-    imageRemote:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop&q=80',
     alt: 'Edificio inteligente con sistemas centralizados de domótica y seguridad',
   },
 ]

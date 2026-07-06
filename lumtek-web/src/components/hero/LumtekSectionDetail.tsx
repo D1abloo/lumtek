@@ -3,7 +3,7 @@ import type { AppSection } from '../../data/appSections'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { SectionInteractiveImage } from './SectionInteractiveImage'
 import { PhoneNavBar } from './PhoneNavBar'
-import { PhoneBrandLogo } from './PhoneBrandLogo'
+import { SectionAppLogo } from './SectionAppLogo'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -33,7 +33,7 @@ export const LumtekSectionDetail = ({ section, onBack }: LumtekSectionDetailProp
         }`}
       >
         <div className="flex items-start gap-2">
-          <PhoneBrandLogo size="sm" className="mt-0.5 shrink-0" />
+          <SectionAppLogo id={section.id} className="mt-0.5 h-8 w-8 shrink-0" glow />
           <div className="min-w-0 flex-1 overflow-hidden">
             <p
               className={`truncate font-app-body text-[9px] font-semibold uppercase tracking-[0.1em] ${

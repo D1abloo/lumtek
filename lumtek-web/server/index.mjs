@@ -5,6 +5,13 @@ import nodemailer from 'nodemailer'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildClientEmail, buildStaffEmail } from './contactEmail.mjs'
+import {
+  applySecurityHeaders,
+  createContactRateLimiter,
+  sanitizeContactPayload,
+  sanitizeEmailHeader,
+  sanitizeMailDisplayName,
+} from './contactSecurity.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
@@ -16,8 +23,15 @@ const smtpSecure = process.env.SMTP_SECURE !== 'false'
 const smtpUser = process.env.SMTP_USER || 'juanf.delgado@lumtek.es'
 const smtpPass = process.env.SMTP_PASS
 const mailTo = process.env.MAIL_TO || smtpUser
-const mailFromName = process.env.MAIL_FROM_NAME || 'Lumtek Web'
+const mailFromName = sanitizeMailDisplayName(process.env.MAIL_FROM_NAME || 'Lumtek Web')
 const sendClientConfirm = process.env.MAIL_CLIENT_CONFIRM !== 'false'
+
+const corsOrigin = process.env.CORS_ORIGIN
+const allowedOrigins = corsOrigin
+  ? corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
+  : process.env.NODE_ENV === 'production'
+    ? ['https://lumtek.es', 'https://www.lumtek.es']
+    : null
 
 const smtpOptions = {
   host: smtpHost,
@@ -30,50 +44,66 @@ if (!smtpSecure) {
 }
 
 const app = express()
-app.use(cors({ origin: process.env.CORS_ORIGIN || true }))
-app.use(express.json({ limit: '32kb' }))
+app.disable('x-powered-by')
+app.set('trust proxy', 1)
 
-const transporter = smtpPass ? nodemailer.createTransport(smtpOptions) : null
-
-const validateBody = (body) => {
-  const errors = []
-  if (!body?.name?.trim()) errors.push('name')
-  if (!body?.email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email))
-    errors.push('email')
-  if (!body?.phone?.trim()) errors.push('phone')
-  if (!body?.projectType) errors.push('projectType')
-  if (!body?.message?.trim() || body.message.trim().length < 20) errors.push('message')
-  if (!body?.privacyAccepted) errors.push('privacyAccepted')
-  return errors
-}
-
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, smtp: Boolean(transporter) })
+app.use((_req, res, next) => {
+  applySecurityHeaders(res)
+  next()
 })
 
-app.post('/api/contact', async (req, res) => {
+if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGIN) {
+  console.warn('CORS_ORIGIN no definido — usando lista por defecto lumtek.es')
+}
+
+app.use(
+  cors({
+    origin: allowedOrigins
+      ? (origin, cb) => {
+          if (!origin || allowedOrigins.includes(origin)) cb(null, true)
+          else cb(null, false)
+        }
+      : true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+  }),
+)
+app.use(express.json({ limit: '32kb' }))
+
+const contactRateLimit = createContactRateLimiter()
+const transporter = smtpPass ? nodemailer.createTransport(smtpOptions) : null
+
+app.get('/api/health', (_req, res) => {
+  const body =
+    process.env.NODE_ENV === 'production' ? { ok: true } : { ok: true, smtp: Boolean(transporter) }
+  res.json(body)
+})
+
+app.post('/api/contact', contactRateLimit, async (req, res) => {
   if (!transporter) {
     return res.status(503).json({
       ok: false,
-      message: 'SMTP no configurado. Define SMTP_PASS en el archivo .env del servidor.',
+      message: 'Servicio de correo no disponible. Inténtalo más tarde.',
     })
   }
 
-  const errors = validateBody(req.body)
+  const { blocked, errors, payload } = sanitizeContactPayload(req.body)
+  if (blocked) {
+    return res.json({ ok: true })
+  }
   if (errors.length) {
     return res.status(400).json({ ok: false, message: 'Datos del formulario incompletos o no válidos.' })
   }
 
-  const { name, email, phone, projectType, message, company, city, contactPreference } = req.body
-  const payload = { name, email, phone, projectType, message, company, city, contactPreference }
   const staff = buildStaffEmail(payload)
   const client = buildClientEmail(payload)
+  const safeReplyTo = sanitizeEmailHeader(payload.email)
 
   try {
     await transporter.sendMail({
       from: `"${mailFromName}" <${smtpUser}>`,
       to: mailTo,
-      replyTo: email,
+      replyTo: safeReplyTo,
       subject: staff.subject,
       text: staff.text,
       html: staff.html,
@@ -82,7 +112,7 @@ app.post('/api/contact', async (req, res) => {
     if (sendClientConfirm) {
       await transporter.sendMail({
         from: `"${mailFromName}" <${smtpUser}>`,
-        to: email,
+        to: safeReplyTo,
         subject: client.subject,
         text: client.text,
         html: client.html,
@@ -91,16 +121,17 @@ app.post('/api/contact', async (req, res) => {
 
     return res.json({ ok: true })
   } catch (err) {
-    console.error('SMTP error:', err)
+    const msg = err instanceof Error ? err.message : 'unknown'
+    console.error('SMTP error:', msg)
     return res.status(502).json({
       ok: false,
-      message: 'No se pudo enviar el correo. Revisa la configuración SMTP.',
+      message: 'No se pudo enviar el correo. Inténtalo más tarde.',
     })
   }
 })
 
 const dist = path.join(root, 'dist')
-app.use(express.static(dist))
+app.use(express.static(dist, { index: false, maxAge: '7d' }))
 app.use((req, res, next) => {
   if (req.method !== 'GET' || req.path.startsWith('/api')) return next()
   res.sendFile(path.join(dist, 'index.html'), (err) => {
@@ -108,8 +139,8 @@ app.use((req, res, next) => {
   })
 })
 
-app.listen(port, () => {
-  console.log(`Lumtek API en http://localhost:${port}`)
+app.listen(port, '127.0.0.1', () => {
+  console.log(`Lumtek API en http://127.0.0.1:${port}`)
   if (!smtpPass) {
     console.warn('SMTP_PASS no definido — el formulario devolverá 503 hasta configurarlo.')
   }

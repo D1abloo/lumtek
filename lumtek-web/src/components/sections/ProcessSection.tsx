@@ -1,8 +1,12 @@
+import { motion } from 'framer-motion'
 import { processSteps } from '../../data/useCases'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { AnimatedReveal } from '../ui/AnimatedReveal'
 import { SectionTitle } from '../ui/SectionTitle'
 
 export const ProcessSection = () => {
+  const reduced = useReducedMotion()
+
   return (
     <section className="section-y relative overflow-hidden bg-lumtek-surface">
       <div className="relative mx-auto max-w-7xl section-x">
@@ -10,12 +14,18 @@ export const ProcessSection = () => {
 
         <div className="hidden lg:block">
           <div className="relative">
-            <div className="absolute left-0 right-0 top-8 h-px bg-gradient-to-r from-transparent via-lumtek-blue/35 to-transparent" />
+            <motion.div
+              className="absolute left-0 right-0 top-8 h-px origin-left bg-gradient-to-r from-transparent via-lumtek-blue/40 to-transparent"
+              initial={reduced ? { scaleX: 1 } : { scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: reduced ? 0 : 1.1, ease: [0.22, 1, 0.36, 1] }}
+            />
             <div className="grid grid-cols-6 gap-4">
               {processSteps.map((step, i) => (
                 <AnimatedReveal key={step.step} delay={i * 0.08}>
                   <div className="relative pt-12 text-center">
-                    <div className="absolute left-1/2 top-4 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border-2 border-lumtek-blue bg-white font-display text-sm font-bold text-lumtek-blue shadow-soft">
+                    <div className="absolute left-1/2 top-4 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border-2 border-lumtek-blue bg-white font-display text-sm font-bold text-lumtek-blue shadow-soft ring-4 ring-white">
                       {step.step}
                     </div>
                     <h3 className="font-display text-sm font-semibold text-lumtek-text">

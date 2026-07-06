@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -110,6 +112,12 @@ body {
 
   .card-shine:hover::before {
     transform: translateX(100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-shine::before {
+      display: none;
+    }
   }
 
   .camera-noise {

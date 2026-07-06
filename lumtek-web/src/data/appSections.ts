@@ -1,7 +1,26 @@
 import type { LucideIcon } from 'lucide-react'
-import { Blinds, Camera, DoorOpen, Wifi } from 'lucide-react'
+import {
+  Blinds,
+  Camera,
+  DoorOpen,
+  Lightbulb,
+  Radio,
+  ShieldAlert,
+  Thermometer,
+  Video,
+  Wifi,
+} from 'lucide-react'
 
-export type AppSectionId = 'puertas' | 'camaras' | 'ventanas' | 'sistema-it'
+export type AppSectionId =
+  | 'puertas'
+  | 'camaras'
+  | 'ventanas'
+  | 'iluminacion'
+  | 'climatizacion'
+  | 'alarmas'
+  | 'sensores'
+  | 'videoporteros'
+  | 'sistema-it'
 
 export type AppSection = {
   id: AppSectionId
@@ -46,7 +65,7 @@ export const appSections: AppSection[] = [
   },
   {
     id: 'ventanas',
-    label: 'Ventanas',
+    label: 'Persianas',
     title: 'Ventanas inteligentes',
     menuDescription: 'Persianas, sensores y ventilación.',
     detailDescription: 'Automatización, ventilación y control desde el móvil.',
@@ -56,6 +75,71 @@ export const appSections: AppSection[] = [
     icon: Blinds,
     options: ['Ventana salón', 'Ventana dormitorio', 'Persianas', 'Apertura parcial', 'Sensor de apertura'],
     stats: ['3 ventanas conectadas', 'Modo ventilación', 'Escena mañana'],
+  },
+  {
+    id: 'iluminacion',
+    label: 'Iluminación',
+    title: 'Iluminación inteligente',
+    menuDescription: 'Luces, escenas y horarios.',
+    detailDescription: 'Escenas, horarios y encendido automático por presencia.',
+    image: '/images/app/iluminacion.webp',
+    imageAlt: 'Control de iluminación inteligente y escenas Lumtek',
+    logoSrc: '/images/app/icons/iluminacion.svg',
+    icon: Lightbulb,
+    options: ['Luces salón', 'Luces pasillo', 'Intensidad', 'Escena noche', 'Horarios'],
+    stats: ['Escena activa', '6 circuitos', 'Modo automático'],
+  },
+  {
+    id: 'climatizacion',
+    label: 'Climatización',
+    title: 'Climatización',
+    menuDescription: 'Temperatura, modos y eficiencia.',
+    detailDescription: 'Temperatura adaptada a horarios, presencia y eficiencia.',
+    image: '/images/app/climatizacion.webp',
+    imageAlt: 'Climatización inteligente y ahorro energético Lumtek',
+    logoSrc: '/images/app/icons/climatizacion.svg',
+    icon: Thermometer,
+    options: ['22º', 'Modo auto', 'Horario', 'Ahorro', 'Zonas'],
+    stats: ['Modo automático', 'Eficiencia activa', 'Confort estable'],
+  },
+  {
+    id: 'alarmas',
+    label: 'Alarmas',
+    title: 'Alarmas conectadas',
+    menuDescription: 'Avisos, estados y supervisión.',
+    detailDescription: 'Avisos, estados y supervisión conectada en tiempo real.',
+    image: '/images/app/alarmas.webp',
+    imageAlt: 'Panel de alarmas y zonas de seguridad Lumtek',
+    logoSrc: '/images/app/icons/alarmas.svg',
+    icon: ShieldAlert,
+    options: ['Perimetral', 'Interior', 'Sensores', 'Sirena', 'Avisos push'],
+    stats: ['Sistema armado', 'Zonas activas', 'Alertas en vivo'],
+  },
+  {
+    id: 'sensores',
+    label: 'Sensores',
+    title: 'Sensores conectados',
+    menuDescription: 'Movimiento, apertura y alertas.',
+    detailDescription: 'Movimiento, apertura, temperatura, fugas y presencia.',
+    image: '/images/app/sensores.webp',
+    imageAlt: 'Sensores de movimiento, apertura y alertas Lumtek',
+    logoSrc: '/images/app/icons/sensores.svg',
+    icon: Radio,
+    options: ['Movimiento', 'Apertura', 'Temperatura', 'Presencia', 'Fugas'],
+    stats: ['Alertas activas', '8 sensores', 'Tiempo real'],
+  },
+  {
+    id: 'videoporteros',
+    label: 'Videoporteros',
+    title: 'Videoporteros IP',
+    menuDescription: 'Comunicación y apertura remota.',
+    detailDescription: 'Comunicación, apertura y registro de visitas.',
+    image: '/images/app/videoporteros.webp',
+    imageAlt: 'Videoportero con apertura remota Lumtek',
+    logoSrc: '/images/app/icons/videoporteros.svg',
+    icon: Video,
+    options: ['Entrada principal', 'Abrir puerta', 'Historial', 'Videollamada', 'Visitas'],
+    stats: ['En línea', 'Apertura remota', 'Registro activo'],
   },
   {
     id: 'sistema-it',

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { defaultMobileView, mobileViews, type MobileView, type MobileViewId } from '../../data/mobileViews'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { PhoneDemo } from '../hero/PhoneDemo'
@@ -12,7 +12,6 @@ type ViewOptionProps = {
 }
 
 const ViewOption = ({ view, active, onSelect, onHover }: ViewOptionProps) => {
-  const Icon = view.icon
   const reduced = useReducedMotion()
 
   return (
@@ -38,11 +37,16 @@ const ViewOption = ({ view, active, onSelect, onHover }: ViewOptionProps) => {
       )}
       <span className="flex items-start gap-2.5">
         <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-300 ${
+          className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-300 ${
             active ? 'bg-lumtek-blue text-white' : 'bg-lumtek-blue/10 text-lumtek-blue group-hover:bg-lumtek-blue/15'
           }`}
         >
-          <Icon className="h-4 w-4" strokeWidth={2} aria-hidden />
+          <img
+            src={view.logoSrc}
+            alt=""
+            className={`h-5 w-5 object-contain ${active ? 'brightness-0 invert' : ''}`}
+            aria-hidden
+          />
         </span>
         <span className="min-w-0 flex-1">
           <span className={`block text-sm font-semibold ${active ? 'text-lumtek-text' : 'text-lumtek-text/90'}`}>
@@ -58,6 +62,7 @@ const ViewOption = ({ view, active, onSelect, onHover }: ViewOptionProps) => {
 }
 
 export const MobilePhoneShowcase = () => {
+  const reduced = useReducedMotion()
   const [selectedId, setSelectedId] = useState<MobileViewId>(defaultMobileView.id)
   const selectedView = mobileViews.find((v) => v.id === selectedId) ?? defaultMobileView
 
@@ -73,7 +78,7 @@ export const MobilePhoneShowcase = () => {
 
   return (
     <div className="flex w-full max-w-md flex-col gap-5 lg:max-w-none lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
-      <div className="order-2 grid grid-cols-2 gap-2 sm:gap-2.5 lg:order-1 lg:flex lg:max-w-[15.5rem] lg:flex-col lg:gap-2">
+      <div className="order-2 grid max-h-[min(70vh,28rem)] grid-cols-2 gap-2 overflow-y-auto pr-1 sm:gap-2.5 lg:order-1 lg:flex lg:max-h-[min(72vh,32rem)] lg:max-w-[15.5rem] lg:flex-col lg:gap-2">
         {mobileViews.map((view) => (
           <ViewOption
             key={view.id}
@@ -93,12 +98,22 @@ export const MobilePhoneShowcase = () => {
           aria-hidden
         />
         <div className="overflow-visible px-2 py-2 sm:py-4">
-          <PhoneDemo
-            size="showcase"
-            view={selectedView}
-            activeGlow
-            isFirstView={selectedView.id === 'camaras'}
-          />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedView.id}
+              initial={reduced ? false : { opacity: 0, scale: 0.97, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={reduced ? undefined : { opacity: 0, scale: 0.98, y: -6 }}
+              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <PhoneDemo
+                size="showcase"
+                view={selectedView}
+                activeGlow
+                isFirstView={selectedView.id === 'camaras'}
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

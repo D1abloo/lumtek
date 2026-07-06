@@ -29,7 +29,6 @@ export const siteContent = {
 
 export const navItems: NavItem[] = [
   { label: 'Inicio', href: '/' },
-  { label: 'Cámaras', href: '/#camaras' },
   { label: 'Domótica', href: '/#domotica' },
   { label: 'Seguridad', href: '/#seguridad' },
   { label: 'Integración', href: '/#core' },

@@ -1,15 +1,20 @@
+import { sanitizeSubjectPart } from './contactSecurity.mjs'
+
 const esc = (value) =>
   String(value ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 
-const SITE_URL = (
+const rawSiteUrl = (
   process.env.SITE_URL ||
   process.env.PUBLIC_SITE_URL ||
   'https://lumtek.es'
 ).replace(/\/$/, '')
+
+const SITE_URL = /^https:\/\/[^\s"'<>]+$/.test(rawSiteUrl) ? rawSiteUrl : 'https://lumtek.es'
 
 const line = (label, value) => (value ? `${label}: ${value}` : null)
 
@@ -68,7 +73,7 @@ export const buildStaffEmail = (data) => {
 </html>`
 
   return {
-    subject: `[Lumtek] ${projectType} — ${name}`,
+    subject: `[Lumtek] ${sanitizeSubjectPart(projectType)} — ${sanitizeSubjectPart(name)}`,
     text,
     html,
   }
@@ -145,7 +150,7 @@ export const buildClientEmail = (data) => {
         </td></tr>
         <tr><td style="padding:16px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;font-size:12px;color:#94a3b8;line-height:1.6;">
           Lumtek · Domótica y sistemas inteligentes<br>
-          <a href="${SITE_URL}" style="color:#00a8ff;">lumtek.es</a><br>
+          <a href="${esc(SITE_URL)}" style="color:#00a8ff;">lumtek.es</a><br>
           Correo automático de confirmación. No respondas a este mensaje.
         </td></tr>
       </table>

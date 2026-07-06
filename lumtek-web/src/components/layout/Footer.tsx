@@ -6,9 +6,8 @@ import { LUMTEK_BRAND_LOGO_SRC } from './HeaderLogo'
 
 const footerNav = [
   { label: 'Inicio', to: '/' },
-  { label: 'Cámaras', to: '/#camaras' },
   { label: 'Domótica', to: '/#domotica' },
-  { label: 'Acceso a seguridad', to: '/#seguridad' },
+  { label: 'Seguridad', to: '/#seguridad' },
   { label: 'Integración', to: '/#core' },
   { label: 'Servicios', to: '/#servicios' },
   { label: 'Aplicaciones', to: '/#aplicaciones' },

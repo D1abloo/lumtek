@@ -16,7 +16,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import { getUseCaseBySlug, useCases } from '../data/useCases'
-import { SITE_URL, defaultPageSeo } from '../config/siteSeo'
+import { SITE_URL, breadcrumbJsonLd, defaultPageSeo } from '../config/siteSeo'
 import { applyPageSeo } from '../hooks/usePageSeo'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { getIcon } from '../utils/icons'
@@ -52,21 +52,29 @@ const UseCasePage = () => {
       description: useCase.metaDescription,
       path,
       image,
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        name: useCase.title,
-        description: useCase.metaDescription,
-        url: `${SITE_URL}${path}`,
-        provider: {
-          '@type': 'Organization',
-          name: 'Lumtek',
-          url: SITE_URL,
+      imageAlt: useCase.alt,
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: useCase.title,
+          description: useCase.metaDescription,
+          url: `${SITE_URL}${path}`,
+          provider: {
+            '@type': 'Organization',
+            name: 'Lumtek',
+            url: SITE_URL,
+          },
+          areaServed: 'España',
+          serviceType: useCase.title,
+          image,
         },
-        areaServed: 'España',
-        serviceType: useCase.title,
-        image,
-      },
+        breadcrumbJsonLd([
+          { name: 'Inicio', path: '/' },
+          { name: 'Aplicaciones', path: '/#aplicaciones' },
+          { name: useCase.title, path },
+        ]),
+      ],
     })
 
     return () => {
@@ -118,7 +126,6 @@ const UseCasePage = () => {
           <div className="relative aspect-[4/3] min-h-[240px] overflow-hidden lg:aspect-auto lg:min-h-[420px]">
             <OptimizedImage
               src={useCase.image}
-              fallbackSrc={useCase.imageRemote}
               alt={useCase.alt}
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -420,7 +427,6 @@ const UseCasePage = () => {
                   <div className="aspect-[16/10] overflow-hidden">
                     <OptimizedImage
                       src={item.image}
-                      fallbackSrc={item.imageRemote}
                       alt={item.alt}
                       sizes="(max-width: 640px) 100vw, 33vw"
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
